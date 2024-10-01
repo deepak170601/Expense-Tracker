@@ -1,0 +1,18 @@
+.flash-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    z-index: 1000;
+  }
+  
+  .flash-message.success {
+    background-color: green;
+  }
+  
+  .flash-message.error {
+    background-color: red;
+  }
+  

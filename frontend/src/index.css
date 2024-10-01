@@ -1,0 +1,55 @@
+/* index.css */
+
+/* Reset some basic styles for a more consistent look */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body styling */
+body {
+	font-family: 'Montserrat', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  color: #ffffff;
+}
+
+/* Headings */
+
+
+h1 {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+h3 {
+  font-size: 20px;
+}
+
+h4, h5 {
+  font-size: 18px;
+}
+
+/* Padding and margin reset for ul, ol, and p */
+ul, ol, p {
+  margin: 0 0 10px;
+  padding: 0;
+}

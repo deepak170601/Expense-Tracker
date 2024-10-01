@@ -1,0 +1,174 @@
+/* General styles */
+.home {
+  padding: 20px;
+  font-family: Arial, sans-serif; /* Modern font */
+  background-color: #f0f4f8; /* Light background color */
+}
+
+.home-title,
+.expenses-title {
+  color: #34495e; /* Dark blue for titles */
+  margin-bottom: 20px;
+  margin-top: 20px;
+  text-align: center; /* Center-align titles */
+  font-weight: bold; /* Bold font for emphasis */
+}
+
+/* Expense form styles */
+.expense-form {
+  background-color: white; /* White background for form */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly heavier shadow */
+  transition: transform 0.2s ease; /* Transition for hover effect */
+}
+
+.expense-form:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold; /* Bold labels */
+}
+
+input,
+select {
+  width: calc(100% - 22px); /* Adjust width to account for padding */
+  padding: 10px;
+  border: 1px solid #3f8cb5; /* Light blue border */
+  border-radius: 4px; /* Rounded corners */
+  transition: border-color 0.3s; /* Smooth transition for focus effect */
+}
+
+input:focus,
+select:focus {
+  border-color: #ffc107; /* Yellow border on focus */
+  outline: none; /* Remove default outline */
+}
+
+/* Button styles */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 7px;
+  flex-direction: row;
+}
+
+.submit-button,
+.cancel-button,
+.edit-button,
+.delete-button {
+  border: none;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  padding: 10px 15px; /* Consistent padding */
+  min-width: 100px; /* Minimum width for buttons */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.submit-button {
+  background-color: #3f8cb5; /* Light blue button */
+}
+
+.cancel-button {
+  background-color: #f44336; /* Red cancel button */
+  width: 100%;
+}
+
+.edit-button {
+  background-color: #4caf50; /* Green button for edit */
+}
+
+.delete-button {
+  background-color: #f44336; /* Red button for delete */
+}
+
+.submit-button:hover,
+.cancel-button:hover,
+.edit-button:hover,
+.delete-button:hover {
+  transform: translateY(-2px); /* Lift effect on hover */
+  opacity: 0.9; /* Slight opacity change on hover */
+}
+
+.expenses-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 20px; /* Space above expenses list */
+}
+
+.expense-item {
+  background-color: #ffffff; /* White background for items */
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect for items */
+  display: flex;
+  justify-content: space-between; /* Space between details and buttons */
+  align-items: center; /* Center items vertically */
+  transition: transform 0.2s ease; /* Transition for hover effect */
+}
+
+.expense-item:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+  background-color: #3f8cb5; /* Change background color on hover */
+  color: white; /* Change text color on hover */
+}
+
+.expense-details {
+  flex-grow: 1; /* Allow details to grow */
+}
+
+.expense-amount,
+.expense-description,
+.expense-category,
+.expense-paymentMode {
+  display: block;
+}
+
+.expense-amount {
+  font-weight: bold; /* Bold amount */
+  font-size: 1.2em; /* Slightly larger font */
+}
+
+.edit-icon,
+.delete-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+  color: #34495e;
+  transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.edit-icon:hover,
+.delete-icon:hover {
+  color: #ffc107; /* Yellow color on hover */
+}
+
+/* Show more button styles */
+.show-more-button {
+  background-color: #3f8cb5; /* Light blue button */
+  color: white;
+  padding: 10px 20px; /* Consistent padding */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px; /* Margin for spacing */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+.show-more-button:hover {
+  transform: translateY(-2px); /* Lift effect on hover */
+  opacity: 0.9; /* Slight opacity change on hover */
+}
+#cancel-button,#submit-button{
+  margin: 0px;
+}

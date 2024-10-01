@@ -1,0 +1,140 @@
+/* General styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+}
+
+.app-container {
+    padding: 20px;
+    max-width: 900px;
+    margin: 20px auto; /* Centering the container */
+    background-color: white; /* Ensures contrast with background */
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+}
+
+h2 {
+    color: #34495e;
+    padding-bottom: 12px;
+    margin-bottom: 20px; /* Space below the heading */
+    border-bottom: 1px solid #ddd; /* Separator line for structure */
+}
+
+/* Accounts container styling */
+.accounts-container {
+    display: flex;
+    justify-content: space-between; /* Ensures equal spacing between accounts */
+    gap: 20px; /* Space between account boxes */
+    margin-bottom: 20px; /* Space below the account container */
+}
+
+.account-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    flex: 1; /* Ensures that all account boxes take equal width */
+    min-width: 200px; /* Sets a minimum width to prevent collapsing on smaller screens */
+}
+
+.account-box h3 {
+    color: #34495e;
+}
+
+.account-box p {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+/* Buttons container */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.add-money-btn, .transfer-money-btn {
+    background-color: #3f8cb5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    width: 48%; /* Reduced width to fit two buttons side by side */
+}
+
+.add-money-btn:hover, .transfer-money-btn:hover {
+    background-color: #2c387e;
+}
+
+/* Modal styling */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    width: 300px;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.modal-btn {
+    background-color: #3f8cb5;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.modal-btn:hover {
+    background-color: #2c387e;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .accounts-container {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .account-box {
+        width: 80%;
+        margin-bottom: 20px;
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    .add-money-btn, .transfer-money-btn {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+}

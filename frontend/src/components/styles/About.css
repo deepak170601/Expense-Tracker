@@ -1,0 +1,48 @@
+/* About.css */
+
+.about-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Light gray background for contrast */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-title {
+    color: #34495e; /* Dark blue for main title */
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.about-subtitle {
+    color: #3f8cb5; /* Light blue for subtitles */
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.about-list {
+    margin-left: 20px; /* Indent for lists */
+}
+
+.about-list li {
+    margin-bottom: 8px; /* Space between list items */
+    display: flex;
+    
+}
+
+.about-contact {
+    margin-top: 30px;
+    font-style: italic; /* Italics for contact information */
+}
+
+/* Link styles */
+.about-contact a {
+    color: #3f8cb5; /* Match with subtitle color */
+    text-decoration: none;
+}
+
+.about-contact a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

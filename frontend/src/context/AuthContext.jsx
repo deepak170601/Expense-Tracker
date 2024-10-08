@@ -7,7 +7,7 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   // On component mount, check for token and username in cookies
   useEffect(() => {
@@ -17,8 +17,9 @@ export const AuthProvider = ({ children }) => {
     
     if (token && username) {
       setUser({ token, username });  // Set user state with token and username if they exist
+    } else {
+      console.log('No token or username found in cookies.');
     }
-    console.log('User:', user);
     
   }, []);
 
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.set('username', username, { expires: 1 }); // Set username in cookies (1 day expiry)
 
       // Redirect after login
-      navigate('/accounts'); // This will work only if the user is logged in successfully
+      navigate('/accounts'); // Redirect to accounts page
     } catch (error) {
       console.error('Login failed:', error);
     }

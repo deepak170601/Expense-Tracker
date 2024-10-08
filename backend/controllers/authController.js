@@ -60,10 +60,6 @@ exports.login = async (req, res) => {
       { expiresIn: '7h' }      // Token expiration
     );
 
-    console.log("===========================================================")
-    console.log("Inside backend auth controller")
-    console.log(token);
-
     // Send the token to the client
     res.json({ token });
   } catch (err) {

@@ -9,7 +9,7 @@ import Register from './components/Register';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext'; // Make sure this is correct
 import ProtectedRoute from './components/ProtectedRoute';
-
+import ExpenseList from './components/ExpenseList';
 function App() {
   return (
     <Router>
@@ -23,6 +23,7 @@ function App() {
             <Route path="/accounts" element={<ProtectedRoute><Accounts /></ProtectedRoute> } />
             <Route path="/about" element={<About />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/expenses" element={<ProtectedRoute><ExpenseList /></ProtectedRoute> } />
           </Routes>
         </div>
         </AuthProvider>

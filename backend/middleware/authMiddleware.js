@@ -5,7 +5,6 @@ function authenticateToken(req, res, next) {
   // Retrieve the authorization header
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(' ')[1]; // Extract toke
-  console.log("==========================================================")
 
   console.log(token);
   if (token == null) return res.sendStatus(401); // If there's no token, return 401 Unauthorized

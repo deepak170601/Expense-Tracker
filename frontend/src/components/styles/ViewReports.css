@@ -1,0 +1,55 @@
+.view-reports-container {
+    padding: 20px;
+    background-color: #f9f9f9; /* Light background for reports section */
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: #34495e; /* Dark color for headings */
+  }
+  
+  .report-dropdown {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px; /* Space below dropdown */
+    width: 100%;
+    max-width: 300px; /* Limit width of dropdown */
+  }
+  
+  .report-table {
+    width: 100%;
+    border-collapse: collapse; /* Remove spacing between table cells */
+    margin-top: 20px; /* Space above the table */
+  }
+  
+  .report-table th, .report-table td {
+    border: 1px solid #ddd; /* Light border for table cells */
+    padding: 10px;
+    text-align: left; /* Align text to the left */
+  }
+  
+  .report-table th {
+    background-color: #34495e; /* Dark background for table header */
+    color: white; /* White text color for header */
+  }
+  
+  .report-table tr:hover {
+    background-color: #f1f1f1; /* Highlight row on hover */
+  }
+  
+  .error-text {
+    color: red; /* Color for error messages */
+    margin-top: 10px; /* Space above error message */
+  }
+  .custom-close-button {
+    border: none; /* Remove default border */
+    background: transparent; /* Transparent background for better visibility */
+    cursor: pointer; /* Pointer cursor for better UX */
+}
+
+.custom-close-button:hover {
+    background: rgba(0, 0, 0, 0.1); /* Slight background color on hover */
+    border-radius: 0.25rem; /* Rounded corners on hover */
+}

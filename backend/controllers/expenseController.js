@@ -2,13 +2,11 @@ const pool = require('../models/db');
 const { use } = require('../routes/authRoutes');
 exports.addExpense = async (req, res) => {
   const { username, amount, category, accountId } = req.body;
-  console.log(req.body);
   try {
     const userQuery = await pool.query('SELECT user_id FROM users WHERE username = $1', [username]);
     if (userQuery.rows.length === 0) {
       return res.status(404).json({ message: 'User not found' });
     }
-    console.log(userQuery.rows);
     const userId = userQuery.rows[0].user_id;
     if(accountId==1){
       paymentMode='cashInHand';
@@ -20,7 +18,6 @@ exports.addExpense = async (req, res) => {
       paymentMode='creditCardMoney';
     }
     const accountQuery = await pool.query('SELECT account_id, balance FROM accounts WHERE user_id = $1 AND account_name = $2', [userId, paymentMode]);
-    console.log(accountQuery.rows);
     
     if (!accountQuery.rows.length) {
       return res.status(404).json({ message: 'Account not found' });
@@ -49,7 +46,6 @@ exports.addExpense = async (req, res) => {
 };
 exports.updateExpense = async (req, res) => {
   const { user_id, expense_id, amount, category, paymentMode, prevPaymentMode, description, expense_date } = req.body;
-  console.log(req.body);
   try {
     // Check if the user exists
     const userQuery = await pool.query('SELECT user_id FROM users WHERE user_id = $1', [user_id]);
@@ -166,7 +162,6 @@ exports.getExpenses = async (req, res) => {
        LIMIT $2 OFFSET $3`,
       [userId, limit, offset]
     );
-    console.log('Expenses fetched:', expensesResult.rows);
     res.status(200).json(expensesResult.rows);
   } catch (err) {
     console.error('Error fetching expenses:', err);

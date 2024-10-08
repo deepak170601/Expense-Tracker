@@ -53,7 +53,6 @@ exports.addMoney = async (req, res) => {
     }
 
     const userId = userResult.rows[0].user_id;
-console.log(accountId, amount, accountName, userId);
     // Check if account exists for the user by account_id
     const accountResult = await pool.query(
       'SELECT balance FROM accounts WHERE user_id = $1 AND account_id = $2',

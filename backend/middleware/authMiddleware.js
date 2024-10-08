@@ -6,7 +6,6 @@ function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(' ')[1]; // Extract toke
 
-  console.log(token);
   if (token == null) return res.sendStatus(401); // If there's no token, return 401 Unauthorized
 
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {

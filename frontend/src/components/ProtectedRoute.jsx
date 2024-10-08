@@ -3,9 +3,13 @@ import { Navigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useContext(AuthContext); // Access the user state from AuthContext
-  console.log('ProtectedRoute user:', user);
-    
+  const { user, loading } = useContext(AuthContext); // Access the user state and loading state from AuthContext
+
+  // Show a loading indicator while checking authentication
+  if (loading) {
+    return <div>Loading...</div>; // Optionally, you can return a loading spinner or message
+  }
+
   // Check if user is authenticated
   if (!user) {
     return <Navigate to="/" />; // Redirect to login page if not authenticated

@@ -53,7 +53,6 @@ const fetchExpenses = async (reset = false) => {
       },
     });
     const newExpenses = response.data;
-    console.log('New expenses fetched:', newExpenses);
     
     if (reset) {
       setExpenses(newExpenses); // Reset the expenses if loading fresh
@@ -86,17 +85,14 @@ const handleSubmit = async (e) => {
   }
 
   const newExpense = { amount, description, category, paymentMode };
-  console.log(expenses);
   
   try {
     const token = user?.token; // Get user token
     if (editingIndex !== null) {
       // If editing, update the expense
-      console.log(editingIndex);
       
       // Get the expense to be updated
       const existingExpense = expenses[editingIndex];
-      console.log(existingExpense);
       
       const updatedExpense = {
         ...newExpense,
@@ -104,7 +100,6 @@ const handleSubmit = async (e) => {
         prevPaymentMode: existingExpense.account_id, // Send previous payment mode for balance update
         user_id: existingExpense.user_id, // Send user ID for authentication
       };
-      console.log('Updating expense ID:', updatedExpense);
       
       // Send updated expense to the backend
       await axios.put('/expenses/update', updatedExpense, {
@@ -167,7 +162,6 @@ const handleDelete = async (index) => {
     const updatedExpenses = expenses.filter((_, i) => i !== index);
     setExpenses(updatedExpenses);
 
-    console.log('Expense deleted and balance updated');
   } catch (error) {
     console.error('Error deleting expense:', error.response?.data?.message || error.message);
   }
@@ -196,7 +190,6 @@ const handleDelete = async (index) => {
     setPaymentMode('');
   };
   useEffect(() => {
-    console.log("Current expenses:", expenses);
   }, [expenses]);
   return (
     <div className="home">

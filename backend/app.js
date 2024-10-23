@@ -38,6 +38,28 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/expenses', expenseRoutes);
 app.use('/api/user', userRoutes);
 
+// Test Route 1: GET request to test if the server is running
+app.get('/api/test', (req, res) => {
+  res.status(200).json({
+    message: 'Backend is running successfully!',
+  });
+});
+
+// Test Route 2: POST request to test sending data to the backend
+app.post('/api/test', (req, res) => {
+  const { testField } = req.body; // Extract data from the request body
+  if (testField) {
+    res.status(200).json({
+      message: 'Data received successfully!',
+      receivedData: testField,
+    });
+  } else {
+    res.status(400).json({
+      message: 'No data received!',
+    });
+  }
+});
+
 // Server listening on port defined in .env or fallback to 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

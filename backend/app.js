@@ -12,8 +12,16 @@ dotenv.config(); // Load environment variables from .env
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Enable CORS
+// CORS options to allow only specific origins
+const corsOptions = {
+  origin: ['https://expense-tracker-ten-weld-93.vercel.app', 'http://localhost:3000'], // Allow your frontend domains
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type,Authorization',
+  credentials: true, // Allow cookies or authorization headers to be sent
+};
+
+// Use CORS with options
+app.use(cors(corsOptions)); 
 app.use(express.json()); // Parse JSON bodies
 
 // PostgreSQL connection

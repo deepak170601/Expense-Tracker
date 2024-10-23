@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from '../api/axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -7,44 +7,65 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  let logoutTimer; // For tracking inactivity timeout
 
-  // On component mount, check for token and username in cookies
+  const logout = useCallback(() => {
+    setUser(null);
+    Cookies.remove('token');
+    Cookies.remove('username');
+    navigate('/'); // Redirect to login page on logout
+  }, [navigate]);
+
+  // Reset inactivity timer
+  const resetTimer = () => {
+    if (logoutTimer) {
+      clearTimeout(logoutTimer); // Clear the previous timer
+    }
+    logoutTimer = setTimeout(logout, 10 * 60 * 1000); // Set new timer for 10 minutes (600,000 ms)
+  };
+
+  // Event listener for user activity
+  const activityHandler = () => {
+    resetTimer(); // Reset timer on any activity
+  };
+
+  // On component mount, check for token and username in cookies and listen to user activity
   useEffect(() => {
-    const token = Cookies.get('token'); // Get token from cookies
-    const username = Cookies.get('username'); // Get username from cookies    
+    const token = Cookies.get('token');
+    const username = Cookies.get('username');
     if (token && username) {
-      setUser({ token, username });  // Set user state with token and username if they exist
-    } 
+      setUser({ token, username });
+    }
+    setLoading(false);
 
-    setLoading(false); // Set loading to false after checking cookies
-  }, []);
+    // Add event listeners for user activity
+    window.addEventListener('mousemove', activityHandler);
+    window.addEventListener('keydown', activityHandler);
 
-  // Login function: send credentials to the backend and get the token and username
+    // Cleanup event listeners on unmount
+    return () => {
+      window.removeEventListener('mousemove', activityHandler);
+      window.removeEventListener('keydown', activityHandler);
+      if (logoutTimer) clearTimeout(logoutTimer);
+    };
+  }, [logout]);
+
   const login = async (username, password) => {
     try {
       const response = await axios.post('/auth/login', { username, password });
       const { token } = response.data;
 
-      // Store the token and username in memory and in cookies
-      setUser({ token, username }); // Set the user state
-      Cookies.set('token', token, { expires: 365 }); // Set token in cookies (1 year expiry)
-      Cookies.set('username', username, { expires: 365 }); // Set username in cookies (1 year expiry)
+      setUser({ token, username });
+      Cookies.set('token', token, { expires: 365 });
+      Cookies.set('username', username, { expires: 365 });
 
-      // Redirect after login
-      navigate('/accounts'); // Redirect to accounts page
+      navigate('/accounts');
+      resetTimer(); // Start the inactivity timer on successful login
     } catch (error) {
       console.error('Login failed:', error);
     }
-  };
-
-  // Logout function: remove the token and username from memory and cookies
-  const logout = () => {
-    setUser(null);
-    Cookies.remove('token');
-    Cookies.remove('username');
-    navigate('/'); // Redirect to login page on logout
   };
 
   return (

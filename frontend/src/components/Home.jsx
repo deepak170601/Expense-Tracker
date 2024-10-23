@@ -217,22 +217,29 @@ const handleDelete = async (index) => {
       />
     </div>
     <div className="form-group">
-      <label htmlFor="category">Category</label>
-      <select
-        id="category"
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        required
-      >
-        <option value="">Select Category</option>
-        <option value="Food">Food</option>
-        <option value="Transport">Transport</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Utilities">Utilities</option>
-        <option value="Healthcare">Healthcare</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
+  <label htmlFor="category">Category</label>
+  <select
+    id="category"
+    value={category}
+    onChange={(e) => setCategory(e.target.value)}
+    required
+  >
+    <option value="">Select Category</option>
+    <option value="Food">Food</option>
+    <option value="Transport">Transport</option>
+    <option value="Entertainment">Entertainment</option>
+    <option value="Utilities">Utilities</option>
+    <option value="Healthcare">Healthcare</option>
+    <option value="Other">Other</option>
+    {/* New categories */}
+    <option value="Rent">Rent</option>
+    <option value="Water">Water</option>
+    <option value="Grocery">Grocery</option>
+    <option value="Beverages">Beverages</option>
+    <option value="Office Food">Office Food</option>
+  </select>
+</div>
+
     <div className="form-group">
       <label htmlFor="paymentMode">Payment Mode</label>
       <select

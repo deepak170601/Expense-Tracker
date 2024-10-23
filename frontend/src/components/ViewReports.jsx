@@ -2,34 +2,31 @@ import React, { useState, useContext } from 'react';
 import axios from '../api/axios';
 import AuthContext from '../context/AuthContext';
 import './styles/ViewReports.css';
-import { Bar, Pie } from 'react-chartjs-2'; // Import Bar and Pie charts from react-chartjs-2
+import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import { Modal, Button } from 'react-bootstrap'; // Import Bootstrap components for modal
+import { Modal, Button } from 'react-bootstrap';
 
-// Register required chart.js components
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
 
 const ViewReports = () => {
-  const { user } = useContext(AuthContext); // Get user from AuthContext
+  const { user } = useContext(AuthContext);
   const [selectedOption, setSelectedOption] = useState('');
   const [reportData, setReportData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [showPieChartModal, setShowPieChartModal] = useState(false); // Modal visibility state
-  const [selectedCategory, setSelectedCategory] = useState(null); // For category-specific pie chart
-  const [categoryDataForPie, setCategoryDataForPie] = useState([]); // For pie chart data
+  const [showPieChartModal, setShowPieChartModal] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryDataForPie, setCategoryDataForPie] = useState([]);
 
-  // Handle dropdown option change
   const handleOptionChange = (event) => {
     const option = event.target.value;
     setSelectedOption(option);
-    setShowPieChartModal(false); // Reset modal on option change
+    setShowPieChartModal(false);
     if (option) {
-      fetchReports(option); // Fetch reports when an option is selected
+      fetchReports(option);
     }
   };
 
-  // Fetch reports from the backend
   const fetchReports = async (type) => {
     if (!user || !user.username) {
       setError('User is not authenticated');
@@ -43,11 +40,11 @@ const ViewReports = () => {
     try {
       const response = await axios.get('/reports/reports', {
         headers: {
-          Authorization: `Bearer ${user.token}`, // Pass the token in the Authorization header
+          Authorization: `Bearer ${user.token}`,
         },
         params: {
           type,
-          username: user.username, // Send username as a query parameter
+          username: user.username,
         },
       });
 
@@ -65,7 +62,6 @@ const ViewReports = () => {
     }
   };
 
-  // Format date based on report type
   const formatDate = (type, date) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const dateObj = new Date(date);
@@ -73,18 +69,17 @@ const ViewReports = () => {
     if (type === 'weekly') {
       const startOfWeek = new Date(dateObj);
       const endOfWeek = new Date(dateObj);
-      endOfWeek.setDate(endOfWeek.getDate() + 6); // 7-day interval
+      endOfWeek.setDate(endOfWeek.getDate() + 6);
 
       return `${startOfWeek.toLocaleDateString(undefined, options)} - ${endOfWeek.toLocaleDateString(undefined, options)}`;
     } else if (type === 'monthly') {
       const month = dateObj.toLocaleString(undefined, { month: 'long' });
-      return `${month} ${dateObj.getFullYear()}`; // Monthly format like "January 2024"
+      return `${month} ${dateObj.getFullYear()}`;
     } else {
-      return dateObj.toLocaleDateString(undefined, options); // For daily reports
+      return dateObj.toLocaleDateString(undefined, options);
     }
   };
 
-  // Aggregate report data based on selected option
   const aggregateReportData = () => {
     const aggregatedData = {};
 
@@ -107,7 +102,6 @@ const ViewReports = () => {
     }));
   };
 
-  // Prepare data for the bar chart
   const prepareBarChartData = () => {
     const aggregatedReports = aggregateReportData();
 
@@ -130,14 +124,12 @@ const ViewReports = () => {
     };
   };
 
-  // Handle bar click to show Pie chart for category split in modal
   const handleBarClick = (element) => {
     if (element.length > 0) {
       const index = element[0].index;
       const aggregatedReports = aggregateReportData();
       const selectedData = aggregatedReports[index];
 
-      // Filter out data for selected bar to show pie chart by category
       const categoryData = reportData.filter((report) => {
         const key =
           selectedOption === 'daily' ? report.day :
@@ -147,15 +139,14 @@ const ViewReports = () => {
         return key === selectedData.key;
       });
 
-      setCategoryDataForPie(categoryData); // Set the filtered data for the pie chart
-      setSelectedCategory(selectedData.category); // Store the selected category
-      setShowPieChartModal(true); // Show modal dialog
+      setCategoryDataForPie(categoryData);
+      setSelectedCategory(selectedData.category);
+      setShowPieChartModal(true);
     }
   };
 
-  // Prepare data for the pie chart
   const preparePieChartData = () => {
-    const categoryLabels = [...new Set(categoryDataForPie.map((report) => report.category))]; // Get unique categories
+    const categoryLabels = [...new Set(categoryDataForPie.map((report) => report.category))];
     const categoryTotals = categoryLabels.map(
       (category) =>
         categoryDataForPie.filter((report) => report.category === category).reduce((sum, report) => sum + report.total, 0)
@@ -166,8 +157,8 @@ const ViewReports = () => {
       datasets: [
         {
           data: categoryTotals,
-          backgroundColor: ['#FF6F94', '#4DA6E0', '#FFD26D', '#FFA74D', '#4BC6B0', '#A67BFF'],
-          hoverBackgroundColor: ['#FF6F94', '#4DA6E0', '#FFD26D', '#FFA74D', '#4BC6B0', '#A67BFF'],                   
+          backgroundColor: ['#FF6F94', '#4DA6E0', '#FFD26D', '#FFA74D', '#4BC6B0', '#A67BFF', '#FF9F40', '#4B8C77', '#A57CBA', '#C84B4D'],
+          hoverBackgroundColor: ['#FF6F94', '#4DA6E0', '#FFD26D', '#FFA74D', '#4BC6B0', '#A67BFF', '#FF9F40', '#4B8C77', '#A57CBA', '#C84B4D'],
         },
       ],
     };
@@ -177,7 +168,6 @@ const ViewReports = () => {
     <div className="view-reports-container">
       <h2>View Reports</h2>
 
-      {/* Dropdown to select report type */}
       <select className="report-dropdown" value={selectedOption} onChange={handleOptionChange}>
         <option value="">Select a report type</option>
         <option value="daily">Daily</option>
@@ -185,46 +175,40 @@ const ViewReports = () => {
         <option value="monthly">Monthly</option>
       </select>
 
-      {/* Loading and error states */}
       {loading && <p>Loading reports...</p>}
       {error && <p className="error-text">{error}</p>}
 
-      {/* Display report data in a table */}
       {reportData.length > 0 && (
         <>
-          {/* Render Bar chart */}
           <Bar
             data={prepareBarChartData()}
             options={{
               responsive: true,
-              onClick: (event, element) => handleBarClick(element), // Handle bar click to show pie chart
+              onClick: (event, element) => handleBarClick(element),
             }}
           />
 
-            <table className="table table-striped table-bordered report-table">
+          <table className="table table-striped table-bordered report-table">
             <thead className="thead-dark">
-                <tr>
+              <tr>
                 <th>Total Amount</th>
                 <th>{selectedOption === 'daily' ? 'Day' : selectedOption === 'weekly' ? 'Week' : 'Month'}</th>
-                </tr>
+              </tr>
             </thead>
             <tbody>
-                {aggregateReportData().map((report, index) => (
+              {aggregateReportData().map((report, index) => (
                 <tr key={index}>
-                    <td className="text-right">₹{parseFloat(report.total).toFixed(2)}</td>
-                    <td>{formatDate(selectedOption, report.key)}</td>
+                  <td className="text-right">₹{parseFloat(report.total).toFixed(2)}</td>
+                  <td>{formatDate(selectedOption, report.key)}</td>
                 </tr>
-                ))}
+              ))}
             </tbody>
-            </table>
-
+          </table>
         </>
       )}
 
-      {/* No data message when reportData is empty */}
       {reportData.length === 0 && !loading && <p>No data available</p>}
 
-      {/* Bootstrap modal for showing pie chart */}
       <Modal show={showPieChartModal} onHide={() => setShowPieChartModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Category Split for {selectedCategory}</Modal.Title>

@@ -223,6 +223,7 @@ const handleDelete = async (index) => {
     value={category}
     onChange={(e) => setCategory(e.target.value)}
     required
+    className="comic-font"
   >
     <option value="">Select Category</option>
     <option value="Food">Food</option>
@@ -247,6 +248,7 @@ const handleDelete = async (index) => {
         value={paymentMode}
         onChange={(e) => setPaymentMode(e.target.value)}
         required
+        className="comic-font"
       >
         <option value="">Select Payment Mode</option>
         <option value="Cash in Hand">Cash in Hand</option>
@@ -254,7 +256,7 @@ const handleDelete = async (index) => {
         <option value="Credit Card">Credit Card</option>
       </select>
     </div>
-    <div className="button-group">
+    <div className="button-group" >
       <button type="submit" className="submit-button" id='submit-button'>
         {editingIndex !== null ? 'Update Expense' : 'Add Expense'}
       </button>

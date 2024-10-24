@@ -1,0 +1,86 @@
+.auth-container {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  background-color: #f7f4f4;
+  text-align: center;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
+.auth-container h1 {
+  margin-top: 50px;
+  font-size: 48px;
+  color: #2c3e50;
+  animation: shake 1.5s infinite alternate;
+}
+
+.app-message {
+  margin: 20px auto;
+  font-size: 24px;
+  color: #e74c3c;
+  position: relative;
+  animation: bounce 2s infinite;
+  display: inline-block;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.rotating-emoji {
+  display: inline-block;
+  font-size: 40px;
+  margin: 0 10px;
+  animation: rotate 3s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.running-code {
+  font-size: 16px;
+  color: #8e44ad;
+  margin-top: 20px;
+  animation: typing 5s steps(40, end) infinite, blink 1s infinite;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid;
+  display: inline-block;
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  0%, 50%, 100% {
+    border-color: transparent;
+  }
+  25%, 75% {
+    border-color: #8e44ad;
+  }
+}

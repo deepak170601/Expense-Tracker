@@ -1,7 +1,7 @@
 /* General styles */
 .home {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   padding: 20px;
-  font-family: Arial, sans-serif; /* Modern font */
   background-color: #f0f4f8; /* Light background color */
 }
 
@@ -13,6 +13,7 @@
   text-align: center; /* Center-align titles */
   font-weight: bold; /* Bold font for emphasis */
 }
+
 
 /* Expense form styles */
 .expense-form {
@@ -65,6 +66,7 @@ select:focus {
 .cancel-button,
 .edit-button,
 .delete-button {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   border: none;
   border-radius: 4px;
   color: white;
@@ -100,12 +102,14 @@ select:focus {
 }
 
 .expenses-list {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   list-style-type: none;
   padding: 0;
   margin-top: 20px; /* Space above expenses list */
 }
 
 .expense-item {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   background-color: #ffffff; /* White background for items */
   padding: 15px;
   margin-bottom: 10px;
@@ -155,6 +159,7 @@ select:focus {
 
 /* Show more button styles */
 .show-more-button {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   background-color: #3f8cb5; /* Light blue button */
   color: white;
   padding: 10px 20px; /* Consistent padding */
@@ -171,4 +176,8 @@ select:focus {
 }
 #cancel-button,#submit-button{
   margin: 0px;
+}
+
+.comic-font {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
 }

@@ -44,7 +44,7 @@ const About = () => {
       <h2 className="about-subtitle">Contact Us</h2>
       <p className="about-contact">
         If you have any questions or feedback, we’d love to hear from you! 
-        Please reach out to us at <a href="mailto:support@expensetracker.com">support@expensetracker.com</a>.
+        Please reach out to us at <a href="mailto:deepakchekurthi@gmail.com">support@expensetracker.com</a>.
       </p>
     </div>
   );

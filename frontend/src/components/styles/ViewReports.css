@@ -1,4 +1,5 @@
 .view-reports-container {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   padding: 20px;
   background-color: #f9f9f9; /* Light background for reports section */
   border-radius: 8px;
@@ -10,6 +11,7 @@ h2 {
 }
 
 .report-dropdown {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -19,6 +21,7 @@ h2 {
 }
 
 .report-table {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   width: 100%;
   border-collapse: collapse; /* Remove spacing between table cells */
   margin-top: 20px; /* Space above the table */
@@ -45,9 +48,16 @@ h2 {
 }
 
 .custom-close-button {
-  border: none; /* Remove default border */
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   background: transparent; /* Transparent background for better visibility */
   cursor: pointer; /* Pointer cursor for better UX */
+  padding: 0.5rem; /* Padding around the close button */
+  font-size: 1.25rem; /* Larger font size */
+  color: #34495e;
+  position: absolute; /* Position the button absolutely */
+  top: 0.5rem; /* Position from the top */
+  border: none;
+
 }
 
 .custom-close-button:hover {

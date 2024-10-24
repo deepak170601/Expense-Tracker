@@ -9,7 +9,8 @@
 
 /* Body styling */
 body {
-	font-family: 'Montserrat', sans-serif;
+	/* font-family: 'Montserrat', sans-serif; */
+  font-family: 'Comic Sans MS', cursive, sans-serif;
   background-color: #f4f4f4;
   color: #333;
   line-height: 1.6;

@@ -6,17 +6,21 @@ import AuthContext from '../context/AuthContext.jsx';
 const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      await login(username, password); // Call login from context
+      setIsSubmitting(true); // Disable button during login
+      await login(username.trim(), password); // Trim whitespaces for username
       // Redirection happens in AuthProvider based on saved route or default accounts
     } catch (err) {
       console.error('Login failed:', err);
       alert('Login failed. Please try again.');
+    } finally {
+      setIsSubmitting(false); // Enable button after attempt
     }
   };
 
@@ -44,7 +48,13 @@ const SignIn = () => {
             required
           />
         </div>
-        <button type="submit" className="submit-button">Login</button>
+        <button 
+          type="submit" 
+          className="submit-button" 
+          disabled={isSubmitting} // Disable button while logging in
+        >
+          {isSubmitting ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       <button className="register-button" onClick={() => navigate('/register')}>
         Don't have an account? Register

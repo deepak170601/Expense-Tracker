@@ -11,12 +11,17 @@ exports.register = async (req, res) => {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
+    // Convert username and email to lowercase for case-insensitive registration
+    username = username.toLowerCase();
+    email = email.toLowerCase();
+
     // Check if the user already exists (by email or username)
-    let userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    let userExists = await pool.query('SELECT * FROM users WHERE LOWER(email) = $1', [email]);
     if (userExists.rows.length > 0) {
       return res.status(400).json({ message: 'Email already in use' });
     }
-    userExists = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    
+    userExists = await pool.query('SELECT * FROM users WHERE LOWER(username) = $1', [username]);
     if (userExists.rows.length > 0) {
       return res.status(400).json({ message: 'Username already in use' });
     }
@@ -42,9 +47,12 @@ exports.register = async (req, res) => {
 
 // Login user and generate JWT token
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  let { username, password } = req.body;
   try {
-    const user = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
+    // Convert username to lowercase for case-insensitive login
+    username = username.toLowerCase();
+
+    const user = await pool.query('SELECT * FROM users WHERE LOWER(username) = $1', [username]);
 
     if (user.rows.length === 0) {
       return res.status(400).json({ error: 'Invalid credentials' });

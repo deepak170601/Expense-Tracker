@@ -7,6 +7,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -18,10 +19,19 @@ const Register = () => {
       return;
     }
 
+    // Simple email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
     try {
+      setIsSubmitting(true); // Disable button during submission
+
       const response = await axios.post('/auth/register', { 
-        username, 
-        email, 
+        username: username.trim(),  // Trim whitespaces
+        email: email.trim().toLowerCase(),  // Normalize email
         password 
       });
 
@@ -29,10 +39,8 @@ const Register = () => {
         alert("Registration successful. Please log in.");
         navigate('/'); // Redirect to SignIn after successful registration
       } else {
-        console.log("Unexpected response: ", response);
         alert("Registration failed. Please try again.");
       }
-
     } catch (error) {
       console.error('Registration failed:', error);
 
@@ -42,6 +50,8 @@ const Register = () => {
       } else {
         alert('Registration failed. Please try again.');
       }
+    } finally {
+      setIsSubmitting(false); // Enable button after submission
     }
   };
 
@@ -89,7 +99,13 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit" className="submit-button">Sign Up</button>
+        <button 
+          type="submit" 
+          className="submit-button" 
+          disabled={isSubmitting} // Disable button while submitting
+        >
+          {isSubmitting ? 'Signing up...' : 'Sign Up'}
+        </button>
       </form>
     </div>
   );

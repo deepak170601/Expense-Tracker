@@ -96,13 +96,13 @@
 
 @media (min-width: 401px) and (max-width: 768px) {
   .sidebar {
-    width: 50%; /* Sidebar width for typical mobile devices */
+    width: 30%; /* Sidebar width for typical mobile devices */
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .sidebar {
-    width: 50%; /* Narrower sidebar for tablets or smaller laptops */
+    width: 30%; /* Narrower sidebar for tablets or smaller laptops */
   }
 }
 
@@ -147,7 +147,7 @@
 }
 
 .nav-links-sidebar button:hover {
-  background-color: #c0392b;
+  background-color: #c0392b !important;
 }
 
 /* Close button styling */

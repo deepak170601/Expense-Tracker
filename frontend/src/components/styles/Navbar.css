@@ -90,7 +90,7 @@
 /* Different sidebar sizes based on screen width */
 @media (max-width: 400px) {
   .sidebar {
-    width: 45%; /* Wider sidebar for very small screens */
+    width: 35%; /* Wider sidebar for very small screens */
   }
 }
 

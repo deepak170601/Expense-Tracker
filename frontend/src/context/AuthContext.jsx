@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import axios from '../api/axios';
+import axios from '../api/axios.js';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 

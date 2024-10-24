@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Home from './components/Home';
-import Reports from './components/ViewReports';
-import About from './components/About';
-import Accounts from './components/Accounts';
-import SignIn from './components/SignIn';
-import Register from './components/Register';
-import Navbar from './components/Navbar';
-import { AuthProvider } from './context/AuthContext'; // Make sure this is correct
-import ProtectedRoute from './components/ProtectedRoute';
-import ExpenseList from './components/ExpenseList';
+import Home from './components/Home.jsx';
+import Reports from './components/ViewReports.jsx';
+import About from './components/About.jsx';
+import Accounts from './components/Accounts.jsx';
+import SignIn from './components/SignIn.jsx';
+import Register from './components/Register.jsx';
+import Navbar from './components/Navbar.jsx';
+import { AuthProvider } from './context/AuthContext.jsx'; // Make sure this is correct
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+import ExpenseList from './components/ExpenseList.jsx';
 function App() {
   return (
     <Router>

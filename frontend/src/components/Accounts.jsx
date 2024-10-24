@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from '../api/axios'; // Import axios instance
-import AuthContext from '../context/AuthContext'; // Assuming you're using AuthContext to store JWT token
+import axios from '../api/axios.js'; // Import axios instance
+import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to store JWT token
 import './styles/Accounts.css';
 
 const Accounts = () => {
@@ -73,8 +73,6 @@ const Accounts = () => {
         const accountId = getAccountId(addMoneyAccountName); // Map account name to ID
         const token = user?.token; // Get token from AuthContext
         const username = user?.username; // Get the username
-
-        console.log("user",user);
         
         // Parse amount to float and send to backend
         const amount = parseFloat(amountToAdd);

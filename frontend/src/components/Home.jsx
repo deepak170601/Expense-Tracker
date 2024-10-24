@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import './styles/Home.css'; // Import a separate CSS file for Home component styles
-import AuthContext from '../context/AuthContext'; // Assuming you're using AuthContext to get the user token
-import axios from '../api/axios'; // For sending requests
+import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to get the user token
+import axios from '../api/axios.js'; // For sending requests
 
 function Home() {
   const { user } = useContext(AuthContext); // Get user from AuthContext

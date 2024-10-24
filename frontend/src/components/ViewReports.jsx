@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import axios from '../api/axios';
-import AuthContext from '../context/AuthContext';
+import axios from '../api/axios.js';
+import AuthContext from '../context/AuthContext.jsx';
 import './styles/ViewReports.css';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';

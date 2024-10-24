@@ -5,7 +5,7 @@ body {
 }
 
 .app-container {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Comic Sans MS', sans-serif;
     padding: 20px;
     max-width: 900px;
     margin: 20px auto; /* Centering the container */
@@ -56,7 +56,7 @@ h2 {
 }
 
 .add-money-btn, .transfer-money-btn {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Comic Sans MS', sans-serif;
     background-color: #3f8cb5;
     color: white;
     border: none;
@@ -74,7 +74,7 @@ h2 {
 
 /* Modal styling */
 .modal {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Comic Sans MS', sans-serif;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -92,7 +92,7 @@ h2 {
 }
 
 .modal-btn {
-    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-family: 'Comic Sans MS', sans-serif;
     background-color: #3f8cb5;
     color: white;
     border: none;

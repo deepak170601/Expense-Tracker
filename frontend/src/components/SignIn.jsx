@@ -61,7 +61,7 @@ const SignIn = () => {
           {isSubmitting ? 'Logging in...' : 'Login'}
         </button>
       </form>
-      <button className="register-button" onClick={() => navigate('/register')} style={{ fontFamily: "'Comic Sans MS', cursive, sans-serif" }}>
+      <button className="register-button" onClick={() => navigate('/register')} style={{ fontFamily: "'Comic Sans MS', sans-serif" }}>
         Don't have an account? Register
       </button>
     </div>

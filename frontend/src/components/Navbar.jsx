@@ -41,7 +41,7 @@ const Navbar = () => {
               <li><Link to="/reports">Reports</Link></li>
               <li><Link to="/accounts">Accounts</Link></li>
               <li><Link to="/about">About</Link></li>
-              <li><button onClick={logout}>LOG OUT</button></li>
+              <li><button onClick={logout} style={{ fontFamily: "'Comic Sans MS', sans-serif" }}>LOG OUT</button></li>
             </>
           ) : (
             <>
@@ -67,7 +67,7 @@ const Navbar = () => {
               <li><Link to="/reports" onClick={toggleSidebar}>Reports</Link></li>
               <li><Link to="/accounts" onClick={toggleSidebar}>Accounts</Link></li>
               <li><Link to="/about" onClick={toggleSidebar}>About</Link></li>
-              <li><button onClick={() => { logout(); toggleSidebar(); }}>LOG OUT</button></li>
+              <li><button onClick={() => { logout(); toggleSidebar(); }} style={{ fontFamily: "'Comic Sans MS', sans-serif" }} >LOG OUT</button></li>
             </>
           ) : (
             <>

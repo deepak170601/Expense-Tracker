@@ -224,7 +224,7 @@ const Accounts = () => {
               <select
                 value={addMoneyAccountName}
                 onChange={(e) => setAddMoneyAccountName(e.target.value)}
-                style={{ fontFamily: "'Comic Sans MS', cursive, sans-serif" }}
+                style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
               >
                 <option value="">Select</option>
                 <option value="cashInHand">Cash in Hand</option>
@@ -259,7 +259,7 @@ const Accounts = () => {
         <select
           value={transferFromAccountName}
           onChange={(e) => setTransferFromAccountName(e.target.value)}
-          style={{ fontFamily: "'Comic Sans MS', cursive, sans-serif" }}
+          style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
         >
           <option value="">Select</option>
           <option value="cashInHand">Cash in Hand</option>
@@ -273,7 +273,7 @@ const Accounts = () => {
         <select
           value={transferToAccountName}
           onChange={(e) => setTransferToAccountName(e.target.value)}
-          style={{ fontFamily: "'Comic Sans MS', cursive, sans-serif" }}
+          style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
         >
           <option value="">Select</option>
           <option value="cashInHand">Cash in Hand</option>

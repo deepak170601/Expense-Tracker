@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from '../api/axios.js';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
@@ -13,8 +12,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(() => {
     setUser(null);
-    Cookies.remove('token');
-    Cookies.remove('username');
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('username');
     navigate('/'); // Redirect to login page on logout
   }, [navigate]);
 
@@ -31,10 +30,10 @@ export const AuthProvider = ({ children }) => {
     resetTimer(); // Reset timer on any activity
   };
 
-  // On component mount, check for token and username in cookies and listen to user activity
+  // On component mount, check for token and username in sessionStorage and listen to user activity
   useEffect(() => {
-    const token = Cookies.get('token');
-    const username = Cookies.get('username');
+    const token = sessionStorage.getItem('token');
+    const username = sessionStorage.getItem('username');
     if (token && username) {
       setUser({ token, username });
     }
@@ -58,8 +57,8 @@ export const AuthProvider = ({ children }) => {
       const { token } = response.data;
 
       setUser({ token, username });
-      Cookies.set('token', token, { expires: 365 });
-      Cookies.set('username', username, { expires: 365 });
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('username', username);
 
       navigate('/accounts');
       resetTimer(); // Start the inactivity timer on successful login

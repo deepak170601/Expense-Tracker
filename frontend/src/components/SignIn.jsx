@@ -8,14 +8,19 @@ const SignIn = () => {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
+  const { login, user } = useContext(AuthContext);
+
+  // If the user is authenticated, redirect to the accounts page
+  if (user) {
+    navigate('/accounts'); // Adjust this route based on your app
+    return null; // Prevent rendering the SignIn form if authenticated
+  }
 
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
       setIsSubmitting(true); // Disable button during login
       await login(username.trim(), password); // Trim whitespaces for username
-      // Redirection happens in AuthProvider based on saved route or default accounts
     } catch (err) {
       console.error('Login failed:', err);
       alert('Login failed. Please try again.');

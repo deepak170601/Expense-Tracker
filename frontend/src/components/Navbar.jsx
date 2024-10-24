@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext.jsx';
 import './styles/Navbar.css';
@@ -6,10 +6,27 @@ import './styles/Navbar.css';
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarRef = useRef(null); // Create a ref for the sidebar
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      setIsSidebarOpen(false); // Close sidebar if clicked outside
+    }
+  };
+
+  useEffect(() => {
+    // Attach the click event listener
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []); // Empty dependency array to run only on mount and unmount
 
   return (
     <>
@@ -41,7 +58,7 @@ const Navbar = () => {
       </nav>
 
       {/* Sidebar for smaller screens */}
-      <div className={`sidebar ${isSidebarOpen ? 'active' : ''}`}>
+      <div className={`sidebar ${isSidebarOpen ? 'active' : ''}`} ref={sidebarRef}>
         <button className="close-btn" onClick={toggleSidebar}>×</button>
         <ul className="nav-links-sidebar">
           {user ? (

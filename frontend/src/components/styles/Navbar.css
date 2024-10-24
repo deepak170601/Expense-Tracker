@@ -57,7 +57,7 @@
 
 /* Menu icon styling */
 .menu-icon {
-  display: none;
+  display: none; /* Change this to block or flex to show on smaller screens */
   flex-direction: column;
   cursor: pointer;
 }
@@ -67,21 +67,22 @@
   width: 25px;
   background-color: white;
   margin: 3px 0;
-  transition: transform 0.3s ease;
 }
+
 /* Sidebar styles */
 .sidebar {
   position: fixed;
   top: 0;
   right: -100%; /* Hide the sidebar off-screen to the right */
-  height: 100%;
-  width: 70%; /* Default width for smaller screens */
-  background-color: #34495e;
+  width: 60%; /* Default width for smaller screens */
+  background-color: rgba(72, 98, 125, 0.9); /* Slightly transparent background */
   color: white;
   transition: right 0.3s ease;
   padding: 20px;
   z-index: 1000;
-}
+  overflow-y: auto; /* Allow scrolling if content overflows */
+} 
+
 
 .sidebar.active {
   right: 0; /* Show sidebar when active */
@@ -90,19 +91,19 @@
 /* Different sidebar sizes based on screen width */
 @media (max-width: 400px) {
   .sidebar {
-    width: 35%; /* Wider sidebar for very small screens */
+    width: 60%; /* Wider sidebar for very small screens */
   }
 }
 
 @media (min-width: 401px) and (max-width: 768px) {
   .sidebar {
-    width: 30%; /* Sidebar width for typical mobile devices */
+    width: 40%; /* Sidebar width for typical mobile devices */
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .sidebar {
-    width: 30%; /* Narrower sidebar for tablets or smaller laptops */
+    width: 40%; /* Narrower sidebar for tablets or smaller laptops */
   }
 }
 
@@ -140,7 +141,7 @@
   font-size: 16px;
   border: none;
   border-radius: 4px;
-  background-color: #34495e;
+  background-color: rgba(101, 127, 155, 0.9);
   color: white;
   cursor: pointer;
   transition: 0.3s ease;

@@ -54,9 +54,9 @@ const ViewReports = () => {
       } else {
         setError('No data available for the selected report type.');
       }
-    } catch (err) {
-      console.error('Error fetching report data:', err);
-      setError('Failed to fetch report data. Please try again.');
+    } catch (error) {
+      const errorMessage = handleApiError(error);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

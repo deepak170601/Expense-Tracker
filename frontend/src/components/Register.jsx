@@ -2,19 +2,33 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../api/axios.js'; // Import axios instance
 import './styles/Funny.css';
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+  const validateUsername = (username) => {
+    return username.trim().length >= 3;
+  };
+
+  const validatePasswords = (password, confirmPassword) => {
+    return password === confirmPassword;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
-    if (password !== confirmPassword) {
+    if (!validateUsername(username)) {
+      alert("Username must be at least 3 characters long.");
+      return;
+    }
+
+    if (!validatePasswords(password, confirmPassword)) {
       alert("Passwords do not match!");
       return;
     }
@@ -28,6 +42,7 @@ const Register = () => {
 
     try {
       setIsSubmitting(true); // Disable button during submission
+      setErrorMessage(''); // Clear previous error messages
 
       const response = await axios.post('/auth/register', { 
         username: username.trim(),  // Trim whitespaces
@@ -46,9 +61,9 @@ const Register = () => {
 
       // Display a more detailed error message if available
       if (error.response && error.response.data && error.response.data.message) {
-        alert(`Error: ${error.response.data.message}`);
+        setErrorMessage(`Error: ${error.response.data.message}`);
       } else {
-        alert('Registration failed. Please try again.');
+        setErrorMessage('Registration failed. Please try again.');
       }
     } finally {
       setIsSubmitting(false); // Enable button after submission
@@ -56,69 +71,75 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-    <h1>Build Your Own App!</h1>
-    <p className="app-message">
-      It's easier than herding cats... 
-      <span className="rotating-emoji">🐱</span> 
-      <span className="rotating-emoji">💻</span>
-    </p>
-    <div className="running-code">
-    <span>{'Brewing coffee for the server... Please wait !'}</span>
-    </div>
-  </div>
+    <form className="auth-form" onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="confirmPassword">Confirm Password:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+      </div>
+      {errorMessage && (
+        <div className="error-message" aria-live="polite">
+          {errorMessage}
+        </div>
+      )}
+      <button 
+        type="submit" 
+        className="submit-button" 
+        disabled={isSubmitting} // Disable button while submitting
+      >
+        {isSubmitting ? 'Signing up...' : 'Sign Up'}
+      </button>
+    </form> 
   );
 };
 
 export default Register;
 
-
-{/* <form className="auth-form" onSubmit={handleSubmit}>
-  <div className="form-group">
-    <label htmlFor="username">Username:</label>
-    <input
-      type="text"
-      id="username"
-      value={username}
-      onChange={(e) => setUsername(e.target.value)}
-      required
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="email">Email:</label>
-    <input
-      type="email"
-      id="email"
-      value={email}
-      onChange={(e) => setEmail(e.target.value)}
-      required
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="password">Password:</label>
-    <input
-      type="password"
-      id="password"
-      value={password}
-      onChange={(e) => setPassword(e.target.value)}
-      required
-    />
-  </div>
-  <div className="form-group">
-    <label htmlFor="confirmPassword">Confirm Password:</label>
-    <input
-      type="password"
-      id="confirmPassword"
-      value={confirmPassword}
-      onChange={(e) => setConfirmPassword(e.target.value)}
-      required
-    />
-  </div>
-  <button 
-    type="submit" 
-    className="submit-button" 
-    disabled={isSubmitting} // Disable button while submitting
-  >
-    {isSubmitting ? 'Signing up...' : 'Sign Up'}
-  </button>
-</form> */}
+{
+//   <div className="auth-container">
+//   <h1>Build Your Own App!</h1>
+//   <p className="app-message">
+//     It's easier than herding cats... 
+//     <span className="rotating-emoji">🐱</span> 
+//     <span className="rotating-emoji">💻</span>
+//   </p>
+//   <div className="running-code">
+//   <span>{'Brewing coffee for the server... Please wait !'}</span>
+//   </div>
+// </div>
+}

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const { Pool } = require('pg'); // PostgreSQL client
+const initDb = require('./models/initDb'); // Import database initialization
 const authRoutes = require('./routes/authRoutes');
 const expenseRoutes = require('./routes/expenseRoutes');
 const transferRoutes = require('./routes/transferRoutes');
@@ -21,12 +22,18 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
-// Check PostgreSQL connection
-pool.connect((err) => {
+// Check PostgreSQL connection and initialize database
+pool.connect(async (err) => {
   if (err) {
     console.error('Database connection failed:', err.stack);
   } else {
     console.log('Database connected successfully');
+    // Initialize database tables
+    try {
+      await initDb();
+    } catch (error) {
+      console.error('Failed to initialize database tables:', error);
+    }
   }
 });
 

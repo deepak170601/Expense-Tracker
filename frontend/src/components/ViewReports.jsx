@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from '../api/axios.js';
 import AuthContext from '../context/AuthContext.jsx';
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import './styles/ViewReports.css';
 import { Bar, Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
@@ -10,10 +11,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 
 const ViewReports = () => {
   const { user } = useContext(AuthContext);
+  const { showMessage } = useFlashMessage();
   const [selectedOption, setSelectedOption] = useState('');
   const [reportData, setReportData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const [showPieChartModal, setShowPieChartModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categoryDataForPie, setCategoryDataForPie] = useState([]);
@@ -29,12 +30,11 @@ const ViewReports = () => {
 
   const fetchReports = async (type) => {
     if (!user || !user.username) {
-      setError('User is not authenticated');
+      showMessage('User is not authenticated', 'error');
       return;
     }
 
     setLoading(true);
-    setError('');
     setReportData([]);
 
     try {
@@ -52,11 +52,12 @@ const ViewReports = () => {
       if (Array.isArray(data) && data.length > 0) {
         setReportData(data);
       } else {
-        setError('No data available for the selected report type.');
+        showMessage('No data available for the selected report type.', 'info');
       }
     } catch (error) {
-      const errorMessage = handleApiError(error);
-      setError(errorMessage);
+      console.error('Error fetching reports:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to fetch reports. Please try again.';
+      showMessage(errorMessage, 'error');
     } finally {
       setLoading(false);
     }
@@ -176,7 +177,6 @@ const ViewReports = () => {
       </select>
 
       {loading && <p>Loading reports...</p>}
-      {error && <p className="error-text">{error}</p>}
 
       {reportData.length > 0 && (
         <>

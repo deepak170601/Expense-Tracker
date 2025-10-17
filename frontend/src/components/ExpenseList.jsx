@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import './styles/Home.css'; // Import a separate CSS file for Home component styles
 import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to get the user token
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import axios from '../api/axios.js'; // For sending requests
 
 function ExpenseList() {
   const { user } = useContext(AuthContext); // Get user from AuthContext
+  const { showMessage } = useFlashMessage();
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -16,6 +18,25 @@ function ExpenseList() {
   const [loading, setLoading] = useState(false); // Loading state for 'Show More'
   const [hasMore, setHasMore] = useState(true); // Whether there are more expenses to load
   const formRef = useRef(null); // Create a reference for the form
+
+  // Helper function to map payment mode to account IDs
+  const getPaymentModeId = (paymentMode) => {
+    const paymentModeMapping = {
+      'Cash in Hand': 1,
+      'Debit Card': 2,
+      'Credit Card': 3,
+    };
+    return paymentModeMapping[paymentMode] || 1; // Default to 'Cash in Hand'
+  };
+
+  const getPaymentMode = (accountId) => {
+    const paymentModeMapping = {
+      1: 'Cash in Hand',
+      2: 'Debit Card',
+      3: 'Credit Card',
+    };
+    return paymentModeMapping[accountId] || 'Unknown'; // Default to 'Unknown' if no match
+  };
 
   // Fetch expenses from the backend with pagination
   const fetchExpenses = async (reset = false) => {
@@ -31,7 +52,6 @@ function ExpenseList() {
         },
       });
       const newExpenses = response.data;
-      console.log('New expenses fetched:', newExpenses);
 
       if (reset) {
         setExpenses(newExpenses); // Reset the expenses if loading fresh
@@ -46,6 +66,7 @@ function ExpenseList() {
       }
     } catch (error) {
       console.error('Error fetching expenses:', error.response?.data?.message || error.message);
+      showMessage('Error fetching expenses. Please try again.', 'error');
     } finally {
       setLoading(false); // Stop loading state
     }
@@ -58,25 +79,42 @@ function ExpenseList() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newExpense = { amount, description, category, paymentMode };
+    const accountId = getPaymentModeId(paymentMode); // Convert payment mode to account ID
+    const newExpense = { amount, description, category, paymentMode, account_id: accountId };
     try {
       const token = user?.token; // Get user token
       if (editingIndex !== null) {
         // If editing, update the expense
         const existingExpense = expenses[editingIndex];
-        await axios.put('/expenses/update', { ...newExpense, expenseId: existingExpense.expense_id }, {
+        await axios.put('/expenses/update', {
+          amount,
+          description,
+          category,
+          account_id: accountId,
+          expenseId: existingExpense.expense_id
+        }, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const updatedExpenses = expenses.map((expense, index) => index === editingIndex ? newExpense : expense);
+        const updatedExpenses = expenses.map((expense, index) =>
+          index === editingIndex ? { ...expense, amount, description, category, account_id: accountId } : expense
+        );
         setExpenses(updatedExpenses);
         setEditingIndex(null);
+        showMessage('Expense updated successfully!', 'success');
       } else {
         // Add a new expense
-        const response = await axios.post('/expenses/add', { ...newExpense, username: user?.username }, {
+        const response = await axios.post('/expenses/add', {
+          amount,
+          description,
+          category,
+          account_id: accountId,
+          username: user?.username
+        }, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        const addedExpense = { ...newExpense, expense_id: response.data.expense_id }; // Expecting response to contain expenseId
+        const addedExpense = { amount, description, category, account_id: accountId, expense_id: response.data.expense_id }; // Expecting response to contain expenseId
         setExpenses((prevExpenses) => [addedExpense, ...prevExpenses]); // Prepend to the list
+        showMessage('Expense added successfully!', 'success');
       }
       
       // Reset form fields
@@ -85,7 +123,9 @@ function ExpenseList() {
       setCategory('');
       setPaymentMode('');
     } catch (error) {
-      console.error('Error processing expense:', error.response?.data?.message || error.message);
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error('Error processing expense:', errorMessage);
+      showMessage(`Error: ${errorMessage}`, 'error');
     }
   };
 
@@ -98,8 +138,11 @@ function ExpenseList() {
       });
       const updatedExpenses = expenses.filter((_, i) => i !== index);
       setExpenses(updatedExpenses);
+      showMessage('Expense deleted successfully!', 'success');
     } catch (error) {
-      console.error('Error deleting expense:', error.response?.data?.message || error.message);
+      const errorMessage = error.response?.data?.message || error.message;
+      console.error('Error deleting expense:', errorMessage);
+      showMessage(`Error deleting expense: ${errorMessage}`, 'error');
     }
   };
 
@@ -108,8 +151,8 @@ function ExpenseList() {
     setAmount(expenseToEdit.amount);
     setDescription(expenseToEdit.description);
     setCategory(expenseToEdit.category);
-    setPaymentMode(expenseToEdit.paymentMode);
-    setEditingIndex(index); 
+    setPaymentMode(getPaymentMode(expenseToEdit.account_id)); // Convert account_id to payment mode name
+    setEditingIndex(index);
     window.scrollTo({ top: formRef.current.offsetTop, behavior: 'smooth' });
   };
 
@@ -157,3 +200,4 @@ function ExpenseList() {
 }
 
 export default  ExpenseList;
+

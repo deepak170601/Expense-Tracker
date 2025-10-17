@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/Auth.css';
 import AuthContext from '../context/AuthContext.jsx';
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 
 const SignIn = () => {
   const [username, setUsername] = useState('');
@@ -9,12 +10,14 @@ const SignIn = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { login, user } = useContext(AuthContext);
+  const { showMessage } = useFlashMessage();
 
   // If the user is authenticated, redirect to the accounts page
-  if (user) {
-    navigate('/accounts'); // Adjust this route based on your app
-    return null; // Prevent rendering the SignIn form if authenticated
-  }
+  useEffect(() => {
+    if (user) {
+      navigate('/accounts'); // Adjust this route based on your app
+    }
+  }, [user, navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -23,7 +26,7 @@ const SignIn = () => {
       await login(username.trim(), password); // Trim whitespaces for username
     } catch (err) {
       console.error('Login failed:', err);
-      alert('Login failed. Please try again.');
+      showMessage('Login failed. Please try again.', 'error');
     } finally {
       setIsSubmitting(false); // Enable button after attempt
     }

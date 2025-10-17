@@ -181,3 +181,39 @@ select:focus {
 .comic-font {
   font-family: 'Comic Sans MS', sans-serif;
 }
+
+/* Flash message styles */
+.flash-message {
+  font-family: 'Comic Sans MS', sans-serif;
+  background-color: #f44336; /* Red background for error */
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  text-align: center;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+  animation: slideIn 0.3s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+  position: relative;
+  z-index: 1000;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

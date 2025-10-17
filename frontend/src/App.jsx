@@ -7,13 +7,18 @@ import Accounts from './components/Accounts.jsx';
 import SignIn from './components/SignIn.jsx';
 import Register from './components/Register.jsx';
 import Navbar from './components/Navbar.jsx';
-import { AuthProvider } from './context/AuthContext.jsx'; // Make sure this is correct
+import { AuthProvider } from './context/AuthContext.jsx';
+import { FlashMessageProvider } from './context/FlashMessageContext.jsx';
+import FlashMessage from './components/FlashMessage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import ExpenseList from './components/ExpenseList.jsx';
+
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
     <AuthProvider>
+      <FlashMessageProvider>
+        <FlashMessage />
         <Navbar />
         <div className="app-container">
           <Routes>
@@ -26,8 +31,9 @@ function App() {
             <Route path="/expenses" element={<ProtectedRoute><ExpenseList /></ProtectedRoute> } />
           </Routes>
         </div>
-        </AuthProvider>
-      </Router>
+      </FlashMessageProvider>
+    </AuthProvider>
+    </Router>
   );
 }
 

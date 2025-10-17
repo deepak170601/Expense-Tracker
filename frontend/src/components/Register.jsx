@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from '../api/axios.js'; // Import axios instance
+import axios from '../api/axios.js';
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import './styles/Funny.css';
 
 const Register = () => {
@@ -11,6 +12,7 @@ const Register = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const { showMessage } = useFlashMessage();
 
   const validateUsername = (username) => {
     return username.trim().length >= 3;
@@ -24,19 +26,19 @@ const Register = () => {
     e.preventDefault();
 
     if (!validateUsername(username)) {
-      alert("Username must be at least 3 characters long.");
+      showMessage("Username must be at least 3 characters long.", 'warning');
       return;
     }
 
     if (!validatePasswords(password, confirmPassword)) {
-      alert("Passwords do not match!");
+      showMessage("Passwords do not match!", 'warning');
       return;
     }
 
     // Simple email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      showMessage("Please enter a valid email address.", 'warning');
       return;
     }
 
@@ -51,10 +53,10 @@ const Register = () => {
       });
 
       if (response.status === 201) {
-        alert("Registration successful. Please log in.");
+        showMessage("Registration successful. Please log in.", 'success');
         navigate('/'); // Redirect to SignIn after successful registration
       } else {
-        alert("Registration failed. Please try again.");
+        showMessage("Registration failed. Please try again.", 'error');
       }
     } catch (error) {
       console.error('Registration failed:', error);

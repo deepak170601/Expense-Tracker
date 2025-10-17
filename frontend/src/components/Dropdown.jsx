@@ -10,11 +10,5 @@ const Dropdown = ({ options, value, onChange, label, id, required }) => (
       </select>
     </div>
   );
-  export default Dropdown;if (!validateUsername(username)) {
-  alert("Username must be at least 3 characters long.");
-  return;
-}
-if (!validatePasswords(password, confirmPassword)) {
-  alert("Passwords do not match!");
-  return;
-}
+
+export default Dropdown;

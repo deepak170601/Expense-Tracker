@@ -60,10 +60,11 @@ export const AuthProvider = ({ children }) => {
       sessionStorage.setItem('token', token);
       sessionStorage.setItem('username', username);
 
-      navigate('/accounts');
+      // Navigation is handled by the useEffect in SignIn component
       resetTimer(); // Start the inactivity timer on successful login
     } catch (error) {
       console.error('Login failed:', error);
+      throw error; // Re-throw so SignIn component can handle the error
     }
   };
 

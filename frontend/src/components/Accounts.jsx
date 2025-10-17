@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import axios from '../api/axios.js'; // Import axios instance
-import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to store JWT token
+import axios from '../api/axios.js';
+import AuthContext from '../context/AuthContext.jsx';
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import './styles/Accounts.css';
 
 const Accounts = () => {
@@ -10,7 +11,8 @@ const Accounts = () => {
     creditCardMoney: 0,
   });
 
-  const { user } = useContext(AuthContext); // Get the token from AuthContext
+  const { user } = useContext(AuthContext);
+  const { showMessage } = useFlashMessage();
   const [showAddMoneyModal, setShowAddMoneyModal] = useState(false);
   const [showTransferMoneyModal, setShowTransferMoneyModal] = useState(false);
 
@@ -77,7 +79,7 @@ const Accounts = () => {
         // Parse amount to float and send to backend
         const amount = parseFloat(amountToAdd);
         if (isNaN(amount) || amount <= 0) {
-          alert('Invalid amount entered');
+          showMessage('Invalid amount entered', 'error');
           return;
         }
   
@@ -101,15 +103,17 @@ const Accounts = () => {
           };
         });
         
+        showMessage('Money added successfully!', 'success');
       } catch (error) {
         console.error('Error adding money:', error);
+        showMessage('Error adding money. Please try again.', 'error');
       } finally {
         setShowAddMoneyModal(false);
         setAmountToAdd(''); // Clear the input after adding
         setAddMoneyAccountName('');
       }
     } else {
-      alert('Please enter a valid amount and select an account.');
+      showMessage('Please enter a valid amount and select an account.', 'warning');
     }
   };
   
@@ -119,7 +123,7 @@ const Accounts = () => {
       try {
         const token = user?.token;
         if (!token) {
-          alert('User authentication token is missing.');
+          showMessage('User authentication token is missing.', 'error');
           return;
         }
   
@@ -129,7 +133,7 @@ const Accounts = () => {
         // Parse transfer amount to float
         const amount = parseFloat(transferAmount);
         if (isNaN(amount) || amount <= 0) {
-          alert('Invalid transfer amount.');
+          showMessage('Invalid transfer amount.', 'error');
           return;
         }
   
@@ -162,13 +166,13 @@ const Accounts = () => {
         setTransferToAccountName('');
         setTransferAmount('');
   
-        alert('Transfer completed successfully!');
+        showMessage('Transfer completed successfully!', 'success');
       } catch (error) {
         console.error('Error transferring money:', error);
-        alert('Error transferring money. Please try again.');
+        showMessage('Error transferring money. Please try again.', 'error');
       }
     } else {
-      alert('Invalid transfer details.');
+      showMessage('Invalid transfer details.', 'warning');
     }
   };
   

@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import './styles/Home.css'; // Import a separate CSS file for Home component styles
 import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to get the user token
+import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import axios from '../api/axios.js'; // For sending requests
 
 function Home() {
   const { user } = useContext(AuthContext); // Get user from AuthContext
+  const { showMessage } = useFlashMessage();
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
@@ -17,6 +19,25 @@ function Home() {
   const [hasMore, setHasMore] = useState(true); // Whether there are more expenses to load
 
   const formRef = useRef(null); // Create a reference for the form
+
+  // Helper function to map payment mode to account IDs
+  const getPaymentModeId = (paymentMode) => {
+    const paymentModeMapping = {
+      'Cash in Hand': 1,
+      'Debit Card': 2,
+      'Credit Card': 3,
+    };
+    return paymentModeMapping[paymentMode] || 1; // Default to 'Cash in Hand'
+  };
+
+  const getPaymentMode = (accountId) => {
+    const paymentModeMapping = {
+      1: 'Cash in Hand',
+      2: 'Debit Card',
+      3: 'Credit Card',
+    };
+    return paymentModeMapping[accountId] || 'Unknown'; // Default to 'Unknown' if no match
+  };
 
   // Fetch account balance from the backend before making transactions
   const fetchBalance = async (accountId) => {
@@ -33,6 +54,7 @@ function Home() {
       return response.data.balance;
     } catch (error) {
       console.error('Error fetching balance:', error.response?.data?.message || error.message);
+      showMessage('Error fetching balance', 'error');
       return null;
     }
   };
@@ -43,10 +65,11 @@ function Home() {
 const fetchExpenses = async (reset = false) => {
   setLoading(true); // Start loading state
   try {
+    const currentOffset = reset ? 0 : offset;
     const response = await axios.get('/expenses/get', {
       params: {
         limit, // Fetch only 10 expenses
-        offset: reset ? 0 : offset, // Reset offset to 0 if loading fresh, else use current offset
+        offset: currentOffset, // Use the calculated offset
       },
       headers: {
         Authorization: `Bearer ${user?.token}`, // Pass token for authentication
@@ -56,11 +79,11 @@ const fetchExpenses = async (reset = false) => {
     
     if (reset) {
       setExpenses(newExpenses); // Reset the expenses if loading fresh
+      setOffset(limit); // Reset offset to limit for next fetch
     } else {
       setExpenses((prevExpenses) => [...prevExpenses, ...newExpenses]); // Append new expenses to existing ones
+      setOffset((prevOffset) => prevOffset + limit); // Update the offset
     }
-    
-    setOffset((prevOffset) => prevOffset + limit); // Update the offset
 
     if (newExpenses.length < limit) {
       setHasMore(false); // If fewer than 10 expenses were fetched, there are no more to load
@@ -72,6 +95,7 @@ const fetchExpenses = async (reset = false) => {
   }
   
 };
+
 const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -80,7 +104,7 @@ const handleSubmit = async (e) => {
   // Check if there is sufficient balance
   const balance = await fetchBalance(accountId);
   if (balance !== null && balance < parseFloat(amount)) {
-    alert('Transaction error: Insufficient balance');
+    showMessage('Transaction error: Insufficient balance', 'error');
     return;
   }
 
@@ -95,10 +119,13 @@ const handleSubmit = async (e) => {
       const existingExpense = expenses[editingIndex];
       
       const updatedExpense = {
-        ...newExpense,
+        amount,
+        description,
+        category,
         expenseId: existingExpense.expense_id, // Use existing expense's ID for the update
-        prevPaymentMode: existingExpense.account_id, // Send previous payment mode for balance update
-        user_id: existingExpense.user_id, // Send user ID for authentication
+        accountId, // New account ID based on selected payment mode
+        prevAccountId: existingExpense.account_id, // Send previous account ID for balance update
+        username: user?.username, // Send username for authentication
       };
       
       // Send updated expense to the backend
@@ -108,18 +135,17 @@ const handleSubmit = async (e) => {
         },
       });
 
-      // Replace the expense in the list
-      const updatedExpenses = expenses.map((expense, index) =>
-        index === editingIndex ? updatedExpense : expense
-      );
-      setExpenses(updatedExpenses);
+      // Fetch expenses again to get updated data from backend
+      await fetchExpenses(true);
       setEditingIndex(null);
     } else {
       // Add a new expense
       const response = await axios.post(
         '/expenses/add',
         {
-          ...newExpense, // Spread newExpense object
+          amount,
+          description,
+          category,
           accountId,
           expenseDate: new Date(), // Current date
           username: user?.username,
@@ -131,9 +157,8 @@ const handleSubmit = async (e) => {
         }
       );
 
-      // Ensure the response includes expenseId
-      const addedExpense = { ...newExpense, expense_id: response.data.expense_id }; // Expecting response to contain expenseId
-      setExpenses((prevExpenses) => [addedExpense, ...prevExpenses]); // Prepend to the list
+      // Fetch expenses again to get the complete updated list from backend
+      await fetchExpenses(true);
     }
 
     // Reset form fields
@@ -142,17 +167,23 @@ const handleSubmit = async (e) => {
     setCategory('');
     setPaymentMode('');
   } catch (error) {
-    console.error('Error processing expense:', error.response?.data?.message || error.message);
+    const errorMessage = error.response?.data?.message || error.message;
+    console.error('Error processing expense:', errorMessage);
+    showMessage(`Error: ${errorMessage}`, 'error');
   }
 };
+
 // Handle expense delete
 const handleDelete = async (index) => {
-  const expenseId = expenses[index].expense_id; // Corrected from expens_id to expense_id
-  const paymentMode = expenses[index].paymentMode;
+  const expenseId = expenses[index].expense_id;
+  const accountId = expenses[index].account_id; // Get account_id for proper deletion
 
   try {
     await axios.delete(`/expenses/delete/${expenseId}`, {
-      data: { username: user?.username }, // Ensure the username is sent
+      data: {
+        username: user?.username,
+        accountId // Send accountId for proper balance restoration
+      },
       headers: {
         Authorization: `Bearer ${user?.token}`, // JWT Token for authentication
       },
@@ -163,7 +194,9 @@ const handleDelete = async (index) => {
     setExpenses(updatedExpenses);
 
   } catch (error) {
-    console.error('Error deleting expense:', error.response?.data?.message || error.message);
+    const errorMessage = error.response?.data?.message || error.message;
+    console.error('Error deleting expense:', errorMessage);
+    showMessage(`Error deleting expense: ${errorMessage}`, 'error');
   }
 };
 
@@ -189,6 +222,12 @@ const handleDelete = async (index) => {
     setCategory('');
     setPaymentMode('');
   };
+
+  // Fetch expenses on component mount
+  useEffect(() => {
+    fetchExpenses(true); // Load initial expenses when component mounts
+  }, []); // Empty dependency array ensures this runs only once on mount
+
   useEffect(() => {
   }, [expenses]);
   return (
@@ -297,21 +336,3 @@ const handleDelete = async (index) => {
 }
 
 export default Home;
-// Helper function to map payment mode to account IDs
-const getPaymentModeId = (paymentMode) => {
-  const paymentModeMapping = {
-    'Cash in Hand': 1,
-    'Debit Card': 2,
-    'Credit Card': 3,
-  };
-  return paymentModeMapping[paymentMode] || 1; // Default to 'Cash in Hand'
-};
-
-const getPaymentMode = (accountId) => {
-  const paymentModeMapping = {
-    1: 'Cash in Hand',
-    2: 'Debit Card',
-    3: 'Credit Card',
-  };
-  return paymentModeMapping[accountId] || 'Unknown'; // Default to 'Unknown' if no match
-};

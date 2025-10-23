@@ -69,7 +69,16 @@ h2 {
 }
 
 .add-money-btn:hover, .transfer-money-btn:hover {
-    background-color: #2c387e;
+    background-color: #1d5370;
+}
+
+/* Backdrop behind modals */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    animation: backdrop-in 180ms ease-out;
 }
 
 /* Modal styling */
@@ -83,12 +92,61 @@ h2 {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    width: 300px;
+    z-index: 1001; /* Above backdrop */
+    width: min(90vw, 420px);
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: modal-in 180ms ease-out;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .modal-content h3 {
     margin-top: 0;
+}
+
+/* Form elements inside modal */
+.modal-content label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+}
+
+.modal-content select,
+.modal-content input[type="number"],
+.modal-content input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd; /* visible neutral border */
+    font-family: 'Comic Sans MS', sans-serif;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+/* Mouse/keyboard focus: yellow border + glow */
+.modal-content select:focus,
+.modal-content input:focus,
+.modal-content select:focus-visible,
+.modal-content input:focus-visible {
+    outline: none;
+    border-color: #ffc107; /* Yellow border on focus */
+    box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+    transition: all 0.2s ease;
+}
+
+/* Actions row inside modal */
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 6px;
 }
 
 .modal-btn {
@@ -96,16 +154,15 @@ h2 {
     background-color: #3f8cb5;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 10px 16px;
     font-size: 16px;
     cursor: pointer;
     border-radius: 4px;
-    margin-top: 10px;
-    width: 100%;
+    width: auto; /* allow side-by-side */
 }
 
 .modal-btn:hover {
-    background-color: #2c387e;
+    background-color: #1d5370;
 }
 
 .cancel-btn {
@@ -114,6 +171,22 @@ h2 {
 
 .cancel-btn:hover {
     background-color: #d32f2f;
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Subtle animations */
+@keyframes modal-in {
+    from { opacity: 0; transform: translate(-50%, -48%) scale(0.98); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Responsive Design */
@@ -139,5 +212,14 @@ h2 {
     .add-money-btn, .transfer-money-btn {
         width: 80%;
         margin-bottom: 10px;
+    }
+
+    .modal-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .modal-btn {
+        width: 100%;
     }
 }

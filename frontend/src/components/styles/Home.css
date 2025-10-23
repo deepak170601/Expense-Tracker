@@ -3,6 +3,8 @@
   font-family: 'Comic Sans MS', sans-serif;
   padding: 20px;
   background-color: #f0f4f8; /* Light background color */
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .home-title,
@@ -12,6 +14,7 @@
   margin-top: 20px;
   text-align: center; /* Center-align titles */
   font-weight: bold; /* Bold font for emphasis */
+  font-size: 1.8em;
 }
 
 
@@ -22,10 +25,11 @@
   border-radius: 8px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Slightly heavier shadow */
   transition: transform 0.2s ease; /* Transition for hover effect */
+  margin-bottom: 30px;
 }
 
 .expense-form:hover {
-  transform: scale(1.02); /* Slightly enlarge on hover */
+  transform: scale(1.01); /* Slightly enlarge on hover */
 }
 
 .form-group {
@@ -34,23 +38,27 @@
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   font-weight: bold; /* Bold labels */
+  color: #34495e;
 }
 
 input,
 select {
-  width: calc(100% - 22px); /* Adjust width to account for padding */
+  width: 100%; /* Full width */
   padding: 10px;
   border: 1px solid #3f8cb5; /* Light blue border */
   border-radius: 4px; /* Rounded corners */
   transition: border-color 0.3s; /* Smooth transition for focus effect */
+  box-sizing: border-box; /* Include padding in width calculation */
+  font-family: 'Comic Sans MS', sans-serif;
 }
 
 input:focus,
 select:focus {
   border-color: #ffc107; /* Yellow border on focus */
   outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
 }
 
 /* Button styles */
@@ -58,8 +66,9 @@ select:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   flex-direction: row;
+  margin-top: 20px;
 }
 
 .submit-button,
@@ -74,19 +83,21 @@ select:focus {
   padding: 10px 15px; /* Consistent padding */
   min-width: 100px; /* Minimum width for buttons */
   transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+  font-weight: bold;
 }
 
 .submit-button {
   background-color: #3f8cb5; /* Light blue button */
+  flex: 1;
 }
 
 .cancel-button {
   background-color: #f44336; /* Red cancel button */
-  width: 100%;
+  flex: 1;
 }
 
 .edit-button {
-  background-color: #4caf50; /* Green button for edit */
+  background-color: #3fb557; /* Same color as submit button */
 }
 
 .delete-button {
@@ -94,11 +105,15 @@ select:focus {
 }
 
 .submit-button:hover,
-.cancel-button:hover,
-.edit-button:hover,
-.delete-button:hover {
+.edit-button:hover {
+  background-color: #5fcb37; /* Darker blue on hover */
   transform: translateY(-2px); /* Lift effect on hover */
-  opacity: 0.9; /* Slight opacity change on hover */
+}
+
+.cancel-button:hover,
+.delete-button:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 .expenses-list {
@@ -111,24 +126,26 @@ select:focus {
 .expense-item {
   font-family: 'Comic Sans MS', sans-serif;
   background-color: #ffffff; /* White background for items */
-  padding: 15px;
+  padding: 15px 20px;
   margin-bottom: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow effect for items */
   display: flex;
   justify-content: space-between; /* Space between details and buttons */
   align-items: center; /* Center items vertically */
-  transition: transform 0.2s ease; /* Transition for hover effect */
+  transition: all 0.2s ease; /* Transition for hover effect */
 }
 
 .expense-item:hover {
-  transform: scale(1.02); /* Slightly enlarge on hover */
+  transform: scale(1.01); /* Slightly enlarge on hover */
   background-color: #3f8cb5; /* Change background color on hover */
   color: white; /* Change text color on hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .expense-details {
   flex-grow: 1; /* Allow details to grow */
+  margin-right: 15px;
 }
 
 .expense-amount,
@@ -136,25 +153,33 @@ select:focus {
 .expense-category,
 .expense-paymentMode {
   display: block;
+  margin-bottom: 5px;
 }
 
 .expense-amount {
   font-weight: bold; /* Bold amount */
   font-size: 1.2em; /* Slightly larger font */
+  color: inherit;
 }
 
 .edit-icon,
 .delete-icon {
   cursor: pointer;
   margin-left: 10px;
-  font-size: 18px;
+  font-size: 20px;
   color: #34495e;
-  transition: color 0.3s ease; /* Smooth color transition */
+  transition: color 0.3s ease, transform 0.2s ease; /* Smooth color transition */
+}
+
+.expense-item:hover .edit-icon,
+.expense-item:hover .delete-icon {
+  color: white;
 }
 
 .edit-icon:hover,
 .delete-icon:hover {
   color: #ffc107; /* Yellow color on hover */
+  transform: scale(1.2);
 }
 
 /* Show more button styles */
@@ -168,13 +193,20 @@ select:focus {
   cursor: pointer;
   margin-top: 20px; /* Margin for spacing */
   transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: bold;
+  min-width: 150px;
 }
 
 .show-more-button:hover {
+  background-color: #2e6a8f; /* Darker blue on hover */
   transform: translateY(-2px); /* Lift effect on hover */
-  opacity: 0.9; /* Slight opacity change on hover */
 }
-#cancel-button,#submit-button{
+
+#cancel-button,
+#submit-button {
   margin: 0px;
 }
 

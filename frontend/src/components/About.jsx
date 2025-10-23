@@ -1,5 +1,23 @@
 import React from 'react';
 import './styles/About.css';
+
+// Constants for better maintainability
+const FEATURES = [
+  { title: 'User-Friendly Interface', description: 'Easy navigation with a clean and intuitive design.' },
+  { title: 'Expense Management', description: 'Effortlessly add, edit, and delete expenses as needed.' },
+  { title: 'Categorization', description: 'Organize expenses into categories like Food, Transport, Entertainment, and more.' },
+  { title: 'Payment Mode Tracking', description: 'Keep track of how you paid (Cash, Debit Card, Credit Card).' },
+  { title: 'Overview of Spending', description: 'Visualize your spending habits to identify areas for improvement.' },
+];
+
+const BENEFITS = [
+  { title: 'Gain Insight', description: 'Understand where your money goes and how to budget more effectively.' },
+  { title: 'Set Goals', description: 'Create spending goals and monitor your progress over time.' },
+  { title: 'Reduce Stress', description: 'Keep your finances organized and make informed decisions.' },
+];
+
+const CONTACT_EMAIL = 'deepakchekurthi@gmail.com';
+
 const About = () => {
   return (
     <div className="about-container">
@@ -12,26 +30,28 @@ const About = () => {
       
       <h2 className="about-subtitle">Features</h2>
       <ul className="about-list">
-        <li><b>User-Friendly Interface</b>: Easy navigation with a clean and intuitive design.</li>
-        <li><b>Expense Management</b>: Effortlessly add, edit, and delete expenses as needed.</li>
-        <li><b>Categorization</b>: Organize expenses into categories like Food, Transport, Entertainment, and more.</li>
-        <li><b>Payment Mode Tracking</b>: Keep track of how you paid (Cash, Debit Card, Credit Card).</li>
-        <li><b>Overview of Spending</b>: Visualize your spending habits to identify areas for improvement.</li>
+        {FEATURES.map((feature, index) => (
+          <li key={index}>
+            <strong>{feature.title}</strong>: {feature.description}
+          </li>
+        ))}
       </ul>
 
       <h2 className="about-subtitle">Benefits</h2>
       <p>Using Expense Tracker can help you:</p>
       <ul className="about-list">
-        <li><b>Gain Insight</b>: Understand where your money goes and how to budget more effectively.</li>
-        <li><b>Set Goals</b>: Create spending goals and monitor your progress over time.</li>
-        <li><b>Reduce Stress</b>: Keep your finances organized and make informed decisions.</li>
+        {BENEFITS.map((benefit, index) => (
+          <li key={index}>
+            <strong>{benefit.title}</strong>: {benefit.description}
+          </li>
+        ))}
       </ul>
       
       <h2 className="about-subtitle">Why Track Expenses?</h2>
       <p>
         Keeping track of your expenses is a vital step towards achieving financial stability. 
         By monitoring your spending habits, you can make more informed decisions, prioritize your needs, and work towards saving for your future. 
-        Whether you're planning for a vacation, saving for a major purchase, or simply trying to live within your means, Expense Tracker is here to assist you on your journey.
+        Whether you&apos;re planning for a vacation, saving for a major purchase, or simply trying to live within your means, Expense Tracker is here to assist you on your journey.
       </p>
 
       <h2 className="about-subtitle">Get Started!</h2>
@@ -43,11 +63,11 @@ const About = () => {
       
       <h2 className="about-subtitle">Contact Us</h2>
       <p className="about-contact">
-        If you have any questions or feedback, we’d love to hear from you! 
-        Please reach out to us at <a href="mailto:deepakchekurthi@gmail.com">support@expensetracker.com</a>.
+        If you have any questions or feedback, we&apos;d love to hear from you!
+        Please reach out to us at <a href={`mailto:${CONTACT_EMAIL}`}>support@expensetracker.com</a>.
       </p>
     </div>
   );
 };
 
-export default About;
+export default React.memo(About);

@@ -4,6 +4,20 @@ import AuthContext from '../context/AuthContext.jsx';
 import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import './styles/Accounts.css';
 
+// Constants to avoid magic strings and repeated literals
+const ACCOUNT_ID_MAP = {
+  cashInHand: 1,
+  debitCardMoney: 2,
+  creditCardMoney: 3,
+};
+
+const ACCOUNT_OPTIONS = [
+  { value: '', label: 'Select' },
+  { value: 'cashInHand', label: 'Cash in Hand' },
+  { value: 'debitCardMoney', label: 'Debit Card Money' },
+  { value: 'creditCardMoney', label: 'Credit Card Money' },
+];
+
 const Accounts = () => {
   const [accountBalances, setAccountBalances] = useState({
     cashInHand: 0,
@@ -23,12 +37,14 @@ const Accounts = () => {
   const [transferFromAccountName, setTransferFromAccountName] = useState('');
   const [transferToAccountName, setTransferToAccountName] = useState('');
   const [transferAmount, setTransferAmount] = useState('');
+
   useEffect(() => {
     const fetchAccountBalances = async () => {
       try {
         const token = user?.token; // Ensure token is available
         if (!token) {
-          throw new Error('No token available');
+          // No token available; skip fetch
+          return;
         }
   
         const response = await axios.get('/accounts/balances', {
@@ -69,22 +85,34 @@ const Accounts = () => {
     fetchAccountBalances();
   }, [user]);
   
+  useEffect(() => {
+    const anyOpen = showAddMoneyModal || showTransferMoneyModal;
+    if (anyOpen) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+    return () => {
+      document.body.classList.remove('modal-open');
+    };
+  }, [showAddMoneyModal, showTransferMoneyModal]);
+
   const handleAddMoney = async () => {
-    if (amountToAdd > 0 && addMoneyAccountName) {
+    // Parse amount to float and validate
+    const amount = parseFloat(amountToAdd);
+    if (addMoneyAccountName && !Number.isNaN(amount) && amount > 0) {
       try {
         const accountId = getAccountId(addMoneyAccountName); // Map account name to ID
         const token = user?.token; // Get token from AuthContext
         const username = user?.username; // Get the username
         
-        // Parse amount to float and send to backend
-        const amount = parseFloat(amountToAdd);
-        if (isNaN(amount) || amount <= 0) {
-          showMessage('Invalid amount entered', 'error');
+        if (!token) {
+          showMessage('User authentication token is missing.', 'error');
           return;
         }
   
         // Send username along with the data
-        const response = await axios.post('/accounts/add', {
+        await axios.post('/accounts/add', {
           accountId,
           amount, // Send the parsed float value
           accountName: addMoneyAccountName,
@@ -138,7 +166,7 @@ const Accounts = () => {
         }
   
         // Send transfer request to backend
-        const response = await axios.post('/accounts/transfer', {
+        await axios.post('/accounts/transfer', {
           fromAccountId,
           toAccountId,
           amount, // Send parsed float value
@@ -150,8 +178,8 @@ const Accounts = () => {
   
         // Update balances if transfer was successful
         setAccountBalances((prevBalances) => {
-          const fromAccountBalance = parseFloat(prevBalances[transferFromAccountName], 10) || 0; // Get current balance as integer
-          const toAccountBalance = parseFloat(prevBalances[transferToAccountName], 10) || 0; // Get current balance as integer
+          const fromAccountBalance = Number(prevBalances[transferFromAccountName]) || 0; // Get current balance as number
+          const toAccountBalance = Number(prevBalances[transferToAccountName]) || 0; // Get current balance as number
 
           return {
             ...prevBalances,
@@ -177,18 +205,7 @@ const Accounts = () => {
   };
   
 
-  const getAccountId = (accountName) => {
-    switch (accountName) {
-      case 'cashInHand':
-        return 1;
-      case 'debitCardMoney':
-        return 2;
-      case 'creditCardMoney':
-        return 3;
-      default:
-        return null;
-    }
-  };
+  const getAccountId = (accountName) => ACCOUNT_ID_MAP[accountName] ?? null;
 
   return (
     <div className="app-container">
@@ -218,22 +235,23 @@ const Accounts = () => {
         </button>
       </div>
 
+      {/* Backdrop for modals */}
+      {(showAddMoneyModal || showTransferMoneyModal) && <div className="modal-backdrop" />}
+
       {/* Add Money Modal */}
       {showAddMoneyModal && (
-        <div className="modal">
+        <div className="modal" role="dialog" aria-modal="true" aria-labelledby="addMoneyDialogTitle">
           <div className="modal-content">
-            <h3>Add Money</h3>
+            <h3 id="addMoneyDialogTitle">Add Money</h3>
             <label>
               Select Account:
               <select
                 value={addMoneyAccountName}
                 onChange={(e) => setAddMoneyAccountName(e.target.value)}
-                style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
               >
-                <option value="">Select</option>
-                <option value="cashInHand">Cash in Hand</option>
-                <option value="debitCardMoney">Debit Card Money</option>
-                <option value="creditCardMoney">Credit Card Money</option>
+                {ACCOUNT_OPTIONS.map((opt) => (
+                  <option key={opt.value || 'placeholder'} value={opt.value}>{opt.label}</option>
+                ))}
               </select>
             </label>
             <label>
@@ -244,31 +262,31 @@ const Accounts = () => {
                 onChange={(e) => setAmountToAdd(e.target.value)} // Keep the value as a string initially
               />
             </label>
-            <button onClick={handleAddMoney} className="modal-btn">
-              Add
-            </button>
-            <button onClick={() => setShowAddMoneyModal(false)} className="modal-btn cancel-btn">
-              Cancel
-            </button>
+            <div className="modal-actions">
+              <button onClick={handleAddMoney} className="modal-btn">
+                Add
+              </button>
+              <button onClick={() => setShowAddMoneyModal(false)} className="modal-btn cancel-btn">
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}
 {/* Transfer Money Modal */}
 {showTransferMoneyModal && (
-  <div className="modal">
+  <div className="modal" role="dialog" aria-modal="true" aria-labelledby="transferMoneyDialogTitle">
     <div className="modal-content">
-      <h3>Transfer Money</h3>
+      <h3 id="transferMoneyDialogTitle">Transfer Money</h3>
       <label>
         From:
         <select
           value={transferFromAccountName}
           onChange={(e) => setTransferFromAccountName(e.target.value)}
-          style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
         >
-          <option value="">Select</option>
-          <option value="cashInHand">Cash in Hand</option>
-          <option value="debitCardMoney">Debit Card Money</option>
-          <option value="creditCardMoney">Credit Card Money</option>
+          {ACCOUNT_OPTIONS.map((opt) => (
+            <option key={`from-${opt.value || 'placeholder'}`} value={opt.value}>{opt.label}</option>
+          ))}
         </select>
       </label>
       
@@ -277,12 +295,10 @@ const Accounts = () => {
         <select
           value={transferToAccountName}
           onChange={(e) => setTransferToAccountName(e.target.value)}
-          style={{ fontFamily: "'Comic Sans MS', sans-serif" }}
         >
-          <option value="">Select</option>
-          <option value="cashInHand">Cash in Hand</option>
-          <option value="debitCardMoney">Debit Card Money</option>
-          <option value="creditCardMoney">Credit Card Money</option>
+          {ACCOUNT_OPTIONS.map((opt) => (
+            <option key={`to-${opt.value || 'placeholder'}`} value={opt.value}>{opt.label}</option>
+          ))}
         </select>
       </label>
 
@@ -295,12 +311,14 @@ const Accounts = () => {
         />
       </label>
 
-      <button onClick={handleTransferMoney} className="modal-btn">
-        Transfer
-      </button>
-      <button onClick={() => setShowTransferMoneyModal(false)} className="modal-btn cancel-btn">
-        Cancel
-      </button>
+      <div className="modal-actions">
+        <button onClick={handleTransferMoney} className="modal-btn">
+          Transfer
+        </button>
+        <button onClick={() => setShowTransferMoneyModal(false)} className="modal-btn cancel-btn">
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 )}

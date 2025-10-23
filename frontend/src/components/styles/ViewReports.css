@@ -1,126 +1,205 @@
 .view-reports-container {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: 'Comic Sans MS', sans-serif;
   padding: 20px;
-  background-color: #f9f9f9; /* Light background for reports section */
+  background-color: #f0f4f8; /* Match Home.css background */
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 h2 {
   color: #34495e; /* Dark color for headings */
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 .report-dropdown {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: 'Comic Sans MS', sans-serif;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #3f8cb5; /* Match input border color */
   border-radius: 4px;
-  margin-bottom: 20px; /* Space below dropdown */
+  margin-bottom: 20px;
   width: 100%;
-  max-width: 300px; /* Limit width of dropdown */
+  max-width: 300px;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  background-color: white;
+}
+
+.report-dropdown:focus {
+  border-color: #ffc107; /* Yellow border on focus */
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+}
+
+.report-dropdown:hover {
+  border-color: #2e6a8f;
 }
 
 .report-table {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: 'Comic Sans MS', sans-serif;
   width: 100%;
-  border-collapse: collapse; /* Remove spacing between table cells */
-  margin-top: 20px; /* Space above the table */
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.report-table th, .report-table td {
-  border: 1px solid #ddd; /* Light border for table cells */
-  padding: 10px;
-  text-align: left; /* Align text to the left */
+.report-table th,
+.report-table td {
+  border: 1px solid #ddd;
+  padding: 12px 15px;
+  text-align: left;
 }
 
 .report-table th {
-  background-color: #34495e; /* Dark background for table header */
-  color: white; /* White text color for header */
+  background-color: #3f8cb5; /* Match the app's primary color */
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.report-table tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 .report-table tr:hover {
-  background-color: #f1f1f1; /* Highlight row on hover */
+  background-color: #e3f2fd; /* Light blue hover instead of gray */
+  transition: background-color 0.2s ease;
+}
+
+.report-table tbody tr {
+  transition: all 0.2s ease;
 }
 
 .error-text {
-  color: red; /* Color for error messages */
-  margin-top: 10px; /* Space above error message */
+  color: #f44336; /* Match error color from other components */
+  margin-top: 10px;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
 }
 
 .custom-close-button {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  background: transparent; /* Transparent background for better visibility */
-  cursor: pointer; /* Pointer cursor for better UX */
-  padding: 0.5rem; /* Padding around the close button */
-  font-size: 1.25rem; /* Larger font size */
+  font-family: 'Comic Sans MS', sans-serif;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.25rem;
   color: #34495e;
-  position: absolute; /* Position the button absolutely */
-  top: 0.5rem; /* Position from the top */
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
   border: none;
-
+  transition: all 0.3s ease;
+  border-radius: 4px;
 }
 
 .custom-close-button:hover {
-  background: rgba(0, 0, 0, 0.1); /* Slight background color on hover */
-  border-radius: 0.25rem; /* Rounded corners on hover */
+  background: rgba(0, 0, 0, 0.1);
+  color: #ffc107;
+  transform: scale(1.1);
+}
+
+.custom-close-button:focus {
+  outline: 2px solid #ffc107;
+  outline-offset: 2px;
 }
 
 /* Style for the close button in the modal header */
+.modal-header {
+  background-color: #3f8cb5;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px 8px 0 0;
+  position: relative;
+}
+
 .modal-header .close {
-  color: #ffffff; /* Change the color to white */
-  opacity: 0.8; /* Slightly transparent */
-  font-size: 1.5rem; /* Increase the size */
+  color: #ffffff;
+  opacity: 0.8;
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .modal-header .close:hover {
-  color: #ffc107; /* Change color on hover */
-  opacity: 1; /* Fully opaque on hover */
-  transition: color 0.3s ease, opacity 0.3s ease; /* Add transition for smooth effect */
+  color: #ffc107;
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .modal-header .close:focus {
-  outline: none; /* Remove outline on focus */
+  outline: none;
+  color: #ffc107;
 }
 
+/* No data message styling */
+.no-data-message {
+  text-align: center;
+  color: #34495e;
+  padding: 20px;
+  font-style: italic;
+}
 
 /* Media query for responsiveness on smaller screens */
 @media (max-width: 768px) {
   .view-reports-container {
-    padding: 15px; /* Reduce padding for smaller screens */
+    padding: 15px;
   }
 
   .report-dropdown {
-    width: 100%; /* Make dropdown fill available space on smaller screens */
-    max-width: 100%; /* Remove max-width to use full width */
+    width: 100%;
+    max-width: 100%;
   }
 
-  .report-table th, .report-table td {
-    padding: 8px; /* Reduce padding for smaller screens */
+  .report-table th,
+  .report-table td {
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 
   h2 {
-    font-size: 1.5rem; /* Adjust font size for headings on smaller screens */
+    font-size: 1.5rem;
   }
 
   .report-table {
-    font-size: 0.9rem; /* Smaller font for table text on smaller screens */
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 576px) {
   .view-reports-container {
-    padding: 10px; /* Further reduce padding for very small screens */
+    padding: 10px;
   }
 
-  .report-table th, .report-table td {
-    padding: 6px; /* Further reduce padding for smaller screens */
+  .report-table th,
+  .report-table td {
+    padding: 8px 10px;
+    font-size: 0.85rem;
   }
 
   h2 {
-    font-size: 1.3rem; /* Further adjust heading size */
+    font-size: 1.3rem;
   }
 
   .report-table {
-    font-size: 0.85rem; /* Further reduce table font size */
+    font-size: 0.85rem;
+  }
+
+  .report-table th {
+    font-size: 0.8rem;
   }
 }

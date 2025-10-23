@@ -1,8 +1,23 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import './styles/Home.css'; // Import a separate CSS file for Home component styles
 import AuthContext from '../context/AuthContext.jsx'; // Assuming you're using AuthContext to get the user token
 import { useFlashMessage } from '../context/FlashMessageContext.jsx';
 import axios from '../api/axios.js'; // For sending requests
+
+// Constants for payment mode mappings
+const PAYMENT_MODE_TO_ID = {
+  'Cash in Hand': 1,
+  'Debit Card': 2,
+  'Credit Card': 3,
+};
+
+const ID_TO_PAYMENT_MODE = {
+  1: 'Cash in Hand',
+  2: 'Debit Card',
+  3: 'Credit Card',
+};
+
+const DEFAULT_LIMIT = 10;
 
 function ExpenseList() {
   const { user } = useContext(AuthContext); // Get user from AuthContext
@@ -13,33 +28,23 @@ function ExpenseList() {
   const [paymentMode, setPaymentMode] = useState(''); // Added state for Payment Mode
   const [expenses, setExpenses] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
-  const [limit] = useState(10); // Set limit to fetch 10 expenses at a time
+  const [limit] = useState(DEFAULT_LIMIT); // Set limit to fetch 10 expenses at a time
   const [offset, setOffset] = useState(0); // Set initial offset to 0
   const [loading, setLoading] = useState(false); // Loading state for 'Show More'
   const [hasMore, setHasMore] = useState(true); // Whether there are more expenses to load
   const formRef = useRef(null); // Create a reference for the form
 
   // Helper function to map payment mode to account IDs
-  const getPaymentModeId = (paymentMode) => {
-    const paymentModeMapping = {
-      'Cash in Hand': 1,
-      'Debit Card': 2,
-      'Credit Card': 3,
-    };
-    return paymentModeMapping[paymentMode] || 1; // Default to 'Cash in Hand'
-  };
+  const getPaymentModeId = useCallback((paymentMode) => {
+    return PAYMENT_MODE_TO_ID[paymentMode] || 1; // Default to 'Cash in Hand'
+  }, []);
 
-  const getPaymentMode = (accountId) => {
-    const paymentModeMapping = {
-      1: 'Cash in Hand',
-      2: 'Debit Card',
-      3: 'Credit Card',
-    };
-    return paymentModeMapping[accountId] || 'Unknown'; // Default to 'Unknown' if no match
-  };
+  const getPaymentMode = useCallback((accountId) => {
+    return ID_TO_PAYMENT_MODE[accountId] || 'Unknown'; // Default to 'Unknown' if no match
+  }, []);
 
   // Fetch expenses from the backend with pagination
-  const fetchExpenses = async (reset = false) => {
+  const fetchExpenses = useCallback(async (reset = false) => {
     setLoading(true); // Start loading state
     try {
       const response = await axios.get('/expenses/get', {
@@ -55,14 +60,12 @@ function ExpenseList() {
 
       if (reset) {
         setExpenses(newExpenses); // Reset the expenses if loading fresh
+        setOffset(limit); // Reset offset to limit after fetching first batch
+        setHasMore(newExpenses.length >= limit); // Check if there are more expenses
       } else {
         setExpenses((prevExpenses) => [...prevExpenses, ...newExpenses]); // Append new expenses to existing ones
-      }
-
-      setOffset((prevOffset) => prevOffset + limit); // Update the offset
-
-      if (newExpenses.length < limit) {
-        setHasMore(false); // If fewer than limit expenses were fetched, there are no more to load
+        setOffset((prevOffset) => prevOffset + limit); // Update the offset
+        setHasMore(newExpenses.length >= limit); // Check if there are more expenses
       }
     } catch (error) {
       console.error('Error fetching expenses:', error.response?.data?.message || error.message);
@@ -70,17 +73,17 @@ function ExpenseList() {
     } finally {
       setLoading(false); // Stop loading state
     }
-  };
+  }, [limit, offset, user?.token, showMessage]);
 
   // Load initial expenses on component mount
   useEffect(() => {
     fetchExpenses(true); // Fetch expenses initially with reset true
-  }, []);
+  }, [fetchExpenses]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const accountId = getPaymentModeId(paymentMode); // Convert payment mode to account ID
-    const newExpense = { amount, description, category, paymentMode, account_id: accountId };
+
     try {
       const token = user?.token; // Get user token
       if (editingIndex !== null) {
@@ -153,7 +156,11 @@ function ExpenseList() {
     setCategory(expenseToEdit.category);
     setPaymentMode(getPaymentMode(expenseToEdit.account_id)); // Convert account_id to payment mode name
     setEditingIndex(index);
-    window.scrollTo({ top: formRef.current.offsetTop, behavior: 'smooth' });
+
+    // Scroll to form with null check
+    if (formRef.current) {
+      window.scrollTo({ top: formRef.current.offsetTop, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -162,7 +169,7 @@ function ExpenseList() {
       
       <ul className="expenses-list">
         {expenses.map((expense, index) => (
-          <li key={index} className="expense-item">
+          <li key={expense.expense_id || index} className="expense-item">
             <div className="expense-details">
               <span className="expense-amount">${expense.amount}</span>
               <span className="expense-description">{expense.description}</span>
@@ -188,16 +195,41 @@ function ExpenseList() {
       <form ref={formRef} onSubmit={handleSubmit}>
         {/* Add input fields for amount, description, category and payment mode */}
         {/* Example input fields */}
-        <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="Amount" required />
-        <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" required />
-        <input type="text" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="Category" required />
-        <input type="text" value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)} placeholder="Payment Mode" required />
-        
+        <input
+          type="number"
+          step="0.01"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="Amount"
+          required
+        />
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Description"
+          required
+        />
+        <input
+          type="text"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          placeholder="Category"
+          required
+        />
+        <input
+          type="text"
+          value={paymentMode}
+          onChange={(e) => setPaymentMode(e.target.value)}
+          placeholder="Payment Mode"
+          required
+        />
+
         <button type="submit">{editingIndex !== null ? 'Update Expense' : 'Add Expense'}</button>
       </form>
     </div>
   );
 }
 
-export default  ExpenseList;
+export default ExpenseList;
 
